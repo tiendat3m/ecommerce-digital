@@ -1,5 +1,6 @@
-const Product = require('../models/Product')
+const Product = require('../models/product')
 const asyncHandler = require('express-async-handler')
+const { PromiseProvider } = require('mongoose')
 const slugify = require('slugify')
 
 const createProduct = asyncHandler(async (req, res) => {
@@ -41,10 +42,7 @@ const getProducts = asyncHandler(async (req, res) => {
     if(req.query.sort) {
         const sortBy = req.query.sort.split(',').join(' ')
         queryCommand = queryCommand.sort(sortBy)
-    }else {
-        queryCommand = queryCommand.sort('-createdAt')
     }
-
     // fields
     if(req.query.fields) {
         const fields = req.query.fields.split(',').join(' ')
@@ -128,6 +126,16 @@ const ratings = asyncHandler(async (req, res) => {
     })
 })
 
+const uploadImagesProduct = asyncHandler(async (req, res) => {
+    const { pid } = req.params
+    if(!req.files) throw new Error('Missing input')
+    const response = await Product.findByIdAndUpdate(pid, { $push: { images: { $each: req.files.map(el => el.path) } } }, {new: true})
+    return res.status(200).json({
+        status: response ? true : false,
+        updatedProduct: response ? response : 'Cannot upload images product'
+    })
+})
+
 module.exports = {
     createProduct,
     getProduct,
@@ -135,5 +143,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     ratings,
-
+    uploadImagesProduct
 }
