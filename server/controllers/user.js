@@ -8,10 +8,10 @@ const crypto = require('crypto')
 const register = asyncHandler(async (req, res) => {
     const { email, password, firstname, lastname } = req.body
     if(!email || !password || !firstname || !lastname) 
-    return res.status(400).json({
-        success: false,
-        mes: 'Missing input'
-    })
+        return res.status(400).json({
+            success: false,
+            mes: 'Missing input'
+        })
     const user = await User.findOne({email})
     if(user) throw new Error('User Existed')
     else {
@@ -27,10 +27,10 @@ const register = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
     if(!email || !password ) 
-    return res.status(400).json({
-        success: false,
-        mes: 'Missing inputs'
-    })
+        return res.status(400).json({
+            success: false,
+            mes: 'Missing inputs'
+        })
     const response = await User.findOne({ email })
     if(response && await response.isCorrectPassword(password)) {
         // tách password và role ra khỏi reponse
