@@ -4,24 +4,68 @@ const { generateAccessToken, generateRefreshToken } = require('../middlewares/jw
 const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/sendMail')
 const crypto = require('crypto')
+const makeToken = require('uniqid')
 
-const register = asyncHandler(async (req, res) => {
-    const { email, password, firstname, lastname } = req.body
-    if(!email || !password || !firstname || !lastname) 
-        return res.status(400).json({
-            success: false,
-            mes: 'Missing input'
-        })
+// const register = asyncHandler(async (req, res) => {
+//     const { email, password, firstname, lastname } = req.body
+//     if(!email || !password || !firstname || !lastname) 
+//         return res.status(400).json({
+//             success: false,
+//             mes: 'Missing input'
+//         })
+//     const user = await User.findOne({email})
+//     if(user) throw new Error('User Existed')
+//     else {
+//         const newUser = await User.create(req.body)
+//         return res.status(200).json({
+//             success: newUser ? true : false,
+//             mes: newUser ? 'Register successfully' : 'Something wrong'
+//         }) 
+//     }
+// })
+
+const register = asyncHandler(async(req, res) => {
+    const { email, password, firstname, lastname, mobile } = req.body
+    if(!email || !password || !firstname || !lastname || !mobile) 
+    return res.status(400).json({
+        success: false,
+        mes: 'Missing input'
+    })
     const user = await User.findOne({email})
-    if(user) throw new Error('User Existed')
+    if(user) throw new Error('Email already existed')
     else {
-        const newUser = await User.create(req.body)
-        return res.status(200).json({
-            success: newUser ? true : false,
-            mes: newUser ? 'Register successfully' : 'Something wrong'
-        }) 
+        const token = makeToken()
+        res.cookie('dataregister', {...req.body, token}, {httpOnly: true, maxAge: 30 * 1000})
+        const html = `Please click the link below to fullfill your registation. Link expires after 15 mins from now. <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`
+        await sendMail({email, html, subject: 'Finish registation Digistal world'})
+        return res.json({
+            success: true,
+            mes: 'Please check your email to active account'
+        })
     }
 })
+
+const finalRegister = asyncHandler(async (req, res) => {
+    const cookie = req.cookies
+    const {token} = req.params
+    if(!cookie || cookie?.dataregister?.token !== token) {
+        res.clearCookie('dataregister')
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    }
+    const newUser = await User.create(
+        {
+            email : cookie?.dataregister?.email,
+            password : cookie?.dataregister?.password,
+            mobile : cookie?.dataregister?.mobile,
+            firstname : cookie?.dataregister?.firstname,
+            lastname : cookie?.dataregister?.lastname,
+        }
+    )
+    res.clearCookie('dataregister')
+    if(newUser) return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
+    else return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+})
+
 //Refresh token: cấp mới accessToken
 //Access token: xác thực người dùng và phân quyền người dùng
 const login = asyncHandler(async (req, res) => {
@@ -107,7 +151,8 @@ const forgotPassword = asyncHandler((async(req, res) => {
     
     const data = {
         email,
-        html
+        html,
+        subject: 'Forgot password'
     }
 
     const rs = await sendMail(data)
@@ -233,5 +278,5 @@ module.exports = {
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
-    
+    finalRegister
 }

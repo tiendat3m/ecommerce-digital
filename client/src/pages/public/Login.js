@@ -3,7 +3,7 @@ import InputField from '../../components/InputField'
 import Button from '../../components/Button';
 import { apiLogin, apiRegister } from '../../apis/user';
 import Swal from 'sweetalert2'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import path from '../../utils/path'
 import { register } from '../../store/user/userSlice';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,8 @@ const Login = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
+    const location = useLocation()
+    console.log(location)
     const [payload, setPayload] = useState({
         email: '',
         password: '',
