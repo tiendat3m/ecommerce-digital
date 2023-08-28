@@ -4,7 +4,7 @@ const Button = ({name, handleOnclick, style, iconsBefore, iconsAfter, fw}) => {
     return (
         <button 
             type='button'
-            className={style ? style : `px-4 py-2 rounded-md text-white bg-main mb-4 ${fw ? 'w-full' : 'w-fit'}`}
+            className={style ? style : `px-4 py-2 rounded-md text-white bg-main mb-4 outline-none ${fw ? 'w-full' : 'w-fit'}`}
             onClick={() => {handleOnclick && handleOnclick()}}
         >
             {iconsBefore}

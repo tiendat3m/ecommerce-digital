@@ -6,10 +6,10 @@ const FinalRegister = () => {
     const {status} = useParams()
     const navigate = useNavigate()
     useEffect(() => {
-        if(status === 'failed') Swal.fire('Opp', 'Đăng kí không thành công', 'error').then(() => {
+        if(status === 'failed') Swal.fire('Opps', 'Đăng kí không thành công', 'error').then(() => {
             navigate(`/${path.LOGIN}`)
         })
-        if(status === 'success') Swal.fire('Opp', 'Đăng kí thành công', 'success').then(() => {
+        if(status === 'success') Swal.fire('Congratulations', 'Đăng kí thành công', 'success').then(() => {
             navigate(`/${path.LOGIN}`)
         })
     }, [])
