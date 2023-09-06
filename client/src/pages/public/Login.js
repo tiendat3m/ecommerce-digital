@@ -3,7 +3,7 @@ import InputField from '../../components/InputField'
 import Button from '../../components/Button';
 import { apiLogin, apiRegister, apiForgotPassword, apiFinalRegister } from '../../apis/user';
 import Swal from 'sweetalert2'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import path from '../../utils/path'
 import { login } from '../../store/user/userSlice';
 import { useDispatch } from 'react-redux';
@@ -178,21 +178,22 @@ const Login = () => {
                         handleOnclick={handleSubmit}
                         fw
                     />
-                <div className='flex justify-between w-full text-sm my-2 items-center'>
-                    {!isRegister && <span className='hover:text-main hover:underline cursor-pointer' onClick={() => setIsForgotPassword(true)}> Forgot your password? </span>}
-                    {!isRegister &&  <span 
-                        className='hover:text-main hover:underline cursor-pointer'
-                        onClick={() => setIsRegister(true)}
-                    > 
-                        Create Account 
-                    </span>}
-                    {isRegister &&  <span 
-                        className='hover:text-main hover:underline cursor-pointer w-full text-center'
-                        onClick={() => setIsRegister(false)}
-                    > 
-                       Back to Login
-                    </span>}
-                </div>
+                    <div className='flex justify-between w-full text-sm my-2 items-center'>
+                        {!isRegister && <span className='hover:text-main hover:underline cursor-pointer' onClick={() => setIsForgotPassword(true)}> Forgot your password? </span>}
+                        {!isRegister &&  <span 
+                            className='hover:text-main hover:underline cursor-pointer'
+                            onClick={() => setIsRegister(true)}
+                        > 
+                            Create Account 
+                        </span>}
+                        {isRegister &&  <span 
+                            className='hover:text-main hover:underline cursor-pointer w-full text-center'
+                            onClick={() => setIsRegister(false)}
+                        > 
+                        Back to Login
+                        </span>}
+                    </div>
+                    <Link to={`/${path.HOME}`} className='hover:text-main hover:underline cursor-pointer text-[14px]'>Go Home</Link>
                 </div>
            </div>
         </div>

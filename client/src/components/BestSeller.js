@@ -46,7 +46,8 @@ const BestSeller = () => {
             </span>
         ))}
       </div>
-      <div className='mt-4 mx-[-10px] border-main border-t-2 pt-4'>
+      <div className='border-main border-t-2 mt-4'></div>
+      <div className='mx-[-10px] pt-5'>
         <CustomSlider activeTab={activeTab} products={products}/>
       </div>
       <div className='flex w-full gap-4 mt-4'>
