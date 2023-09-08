@@ -6,10 +6,6 @@ export const apiRegister = (data) => axios({
     data,
 })
 
-export const apiGetCurrent = () => axios({
-    url: '/user/current',
-    method: 'get',
-})
 
 export const apiFinalRegister = (token) => axios({
     url: 'user/finalregister/' + token,
@@ -32,4 +28,14 @@ export const apiResetPassword = (data) => axios({
     url: 'user/resetpassword',
     method: 'put',
     data
+})
+
+export const apiGetCurrent = () => axios({
+    url: '/user/current',
+    method: 'get',
+})
+
+export const apiGetProduct = (pid) => axios({
+    url: '/product/' + pid,
+    method: 'get',
 })

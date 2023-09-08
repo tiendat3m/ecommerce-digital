@@ -18,7 +18,7 @@ const getProduct = asyncHandler(async (req, res) => {
     const product = await Product.findById(pid)
     return res.status(200).json({
         success: product ? true : false,
-        createdProduct: product ? product : 'Cannot get new product'
+        productData: product ? product : 'Cannot get new product'
     })
 })
 
