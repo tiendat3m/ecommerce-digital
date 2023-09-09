@@ -14,8 +14,8 @@ const Breadcrumb = ({title, category}) => {
     return (
         <div className='text-sm flex items-center'>
             {breadcrumb?.filter(el => !el.match?.route === false).map(({match, breadcrumb}, index, self) => (
-                <NavLink className='flex items-center hover:text-main' key={match.pathname} to={match.pathname}>
-                    {breadcrumb}
+                <NavLink className='flex items-center' key={match.pathname} to={match.pathname}>
+                    <span className='hover:text-main'>{breadcrumb}</span>
                     {index !== self.length - 1 && <span><MdKeyboardArrowRight /></span>}
                 </NavLink>
             ))}
