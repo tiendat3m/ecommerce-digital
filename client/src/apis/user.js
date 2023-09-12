@@ -35,7 +35,3 @@ export const apiGetCurrent = () => axios({
     method: 'get',
 })
 
-export const apiGetProduct = (pid) => axios({
-    url: '/product/' + pid,
-    method: 'get',
-})

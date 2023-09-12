@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom'
-import { apiGetProduct } from '../../apis'
-import { Breadcrumb, Button, SelectQuantity } from '../../components'
+import { apiGetProduct, apiGetProducts } from '../../apis'
+import { Breadcrumb, Button, CustomSlider, ProductInfo, ProductService, SelectQuantity } from '../../components'
 import Slider from 'react-slick'
 import ReactImageMagnify from 'react-image-magnify';
 import { formatMoney, renderStarFromNumber } from '../../utils/helpers'
+import { productService } from '../../utils/constants'
 
 const settings = {
     dots: false,
@@ -15,6 +16,7 @@ const settings = {
 };
 
 const DetailProduct = () => {
+    const [relatedProducts, setrelatedProducts] = useState(null)
     const [quantity, setQuantity] = useState(1)
     const [product, setProduct] = useState(null)
     const {pid, title, category} = useParams()
@@ -24,9 +26,16 @@ const DetailProduct = () => {
         if(response.success) setProduct(response.productData)
     }
     
+    const fetchProducts = async () => {
+        const response = await apiGetProducts({category})
+        if(response.success) setrelatedProducts(response?.products)
+    }
+     
+
     useEffect(() => {
-        if(pid) fetchProductData()
-    }, [])
+        fetchProductData()
+        fetchProducts()
+    }, [pid])
 
     const handleQuantity = useCallback((number) => {
         if(!Number(number) || Number(number) < 1) {
@@ -52,7 +61,7 @@ const DetailProduct = () => {
                     <Breadcrumb title={title} category={product?.category}/>
                 </div>
             </div>
-            <div className='w-main flex m-auto mt-4'>
+            <div className='w-main flex m-auto mt-4 gap-8'>
                 <div className='flex flex-col gap-4 w-2/5'>
                     <div className='w-[485px] border'>
                         <ReactImageMagnify {...{
@@ -61,8 +70,8 @@ const DetailProduct = () => {
                                 src: product?.thumb,
                             },
                             largeImage: {
-                                width: 1200,
-                                height: 1200,
+                                width: 800,
+                                height: 800,
                                 src: product?.thumb,
                             }
                         }} />
@@ -77,16 +86,16 @@ const DetailProduct = () => {
                         </Slider>
                     </div>
                 </div>
-                <div className='w-2/5 pl-[45px] flex flex-col gap-5'>
+                <div className='w-2/5 flex flex-col gap-5'>
                     <div className='flex items-center justify-between'>
                         <h2 className='text-[30px] font-semibold '>{formatMoney(product?.price)} VND</h2>
-                        <span className='text-sm text-main'>{`Kho: ${product?.quantity}`}</span>
+                        <span className='text-sm text-main'>{`In stock: ${product?.quantity}`}</span>
                     </div>
                     <div className='flex items-center'>
                         {renderStarFromNumber(product?.totalRatings)?.map((el, index) => (
                             <span key={index}>{el}</span>
                         ))}
-                        <span className='text-sm text-main ml-4 italic'>{`(Đã bán: ${product?.sold})`}</span>
+                        <span className='text-sm text-main ml-4 italic'>{`(Sold: ${product?.sold})`}</span>
                     </div>
                     <ul className='text-[14px]'>
                         {product?.description?.map((el) => (
@@ -100,9 +109,19 @@ const DetailProduct = () => {
                         </Button>
                     </div>
                 </div>
-                <div className='border border-yellow-400 w-1/5'>
-                    info
+                <div className='w-1/5'>
+                    {productService?.map((el) => (
+                        <ProductService key={el.id} title={el.title} sub={el.sub} icon={el.icon}/>
+                    ))}
                 </div>
+            </div>
+            <div className='w-main mt-8 m-auto'>
+                <ProductInfo />
+            </div>
+
+            <div className='w-main mt-8 m-auto'>
+                <h3 className='text-[20px] py-[15px] border-b-2 border-main font-semibold mb-4'>OTHER CUSTOMERS ALSO BUY:</h3>
+                <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true}/></div>
             </div>
             <div className='h-[400px]'></div>
         </div>

@@ -8,7 +8,7 @@ import  {Link} from 'react-router-dom'
 import path from '../utils/path'
 
 const {AiOutlineMenu, FaRegEye, AiFillHeart} = icons
-const Product = ({productData, isNew}) => {
+const Product = ({productData, isNew , normal}) => {
     const [isShowOption, setIsShowOption] = useState(false);
     return (
         <div className='w-full text-base px-[10px]'>
@@ -31,7 +31,7 @@ const Product = ({productData, isNew}) => {
                         <SelectOption icons={<FaRegEye/>}/>
                     </span>}
                     <img src={productData?.thumb || ''} alt="" className='w-[274px] h-[274px] object-cover'/>
-                    <img src={isNew ? newLabel : trendingLabel} alt="" className={`absolute top-[0] right-[0] w-[100px] h-[35px] object-cover`}/>
+                    {!normal && <img src={isNew ? newLabel : trendingLabel} alt="" className={`absolute top-[0] right-[0] w-[100px] h-[35px] object-cover`}/>}
                 </div>
                 <div className='flex flex-col gap-1 mt-[15px] items-start w-full'>
                     <span className='flex h-4'>{renderStarFromNumber(productData?.totalRatings)?.map((el, index) => (
