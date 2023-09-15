@@ -5,7 +5,6 @@ import trendingLabel from '../assets/trending.png'
 import SelectOption from './SelectOption'
 import icons from '../utils/icons'
 import  {Link} from 'react-router-dom'
-import path from '../utils/path'
 
 const {AiOutlineMenu, FaRegEye, AiFillHeart} = icons
 const Product = ({productData, isNew , normal}) => {

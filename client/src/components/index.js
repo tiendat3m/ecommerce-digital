@@ -17,4 +17,5 @@ export {default as Breadcrumb} from './Breadcrumb'
 export {default as SelectQuantity} from './SelectQuantity'
 export {default as ProductService} from './ProductService'
 export {default as ProductInfo} from './ProductInfo'
+export {default as SearchItem} from './SearchItem'
 

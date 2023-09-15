@@ -3,15 +3,15 @@ import Product from './Product'
 import Slider from 'react-slick'
 
 
-const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1
-};
 
-const CustomSlider = ({products, activeTab, normal}) => {
+const CustomSlider = ({products, activeTab, normal, slidesToShow}) => {
+    const settings = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: slidesToShow || 3,
+        slidesToScroll: 1
+    };
     return (
         <>
             {products && <Slider className='product-slider' {...settings}>

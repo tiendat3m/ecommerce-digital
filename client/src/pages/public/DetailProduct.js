@@ -57,7 +57,7 @@ const DetailProduct = () => {
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main flex gap-2 flex-col'>
-                    <span>{title}</span>
+                    <span className='font-semibold'>{title}</span>
                     <Breadcrumb title={title} category={product?.category}/>
                 </div>
             </div>
@@ -121,7 +121,7 @@ const DetailProduct = () => {
 
             <div className='w-main mt-8 m-auto'>
                 <h3 className='text-[20px] py-[15px] border-b-2 border-main font-semibold mb-4'>OTHER CUSTOMERS ALSO BUY:</h3>
-                <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true}/></div>
+                <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true} slidesToShow={4}/></div>
             </div>
             <div className='h-[400px]'></div>
         </div>

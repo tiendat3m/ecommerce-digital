@@ -116,11 +116,11 @@ const Login = () => {
                     />
                     <div className='flex items-center justify-end w-full gap-2'>
                         <Button 
-                            name='Submit'
+                            children='Submit'
                             handleOnclick={handleForgotPassword}
                         />
                         <Button 
-                            name='Back'
+                            children='Back'
                             handleOnclick={() => setIsForgotPassword(false)}
                             style='px-4 py-2 rounded-md text-white bg-blue-600 mb-4 outline-none'
                         />
@@ -174,7 +174,7 @@ const Login = () => {
                         setInvalidFields={setInvalidFields}
                     />
                     <Button 
-                        name={isRegister ? 'REGISTER' : 'LOGIN'}
+                        children={isRegister ? 'REGISTER' : 'LOGIN'}
                         handleOnclick={handleSubmit}
                         fw
                     />
