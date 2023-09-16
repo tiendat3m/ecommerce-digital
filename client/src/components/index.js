@@ -18,4 +18,5 @@ export {default as SelectQuantity} from './SelectQuantity'
 export {default as ProductService} from './ProductService'
 export {default as ProductInfo} from './ProductInfo'
 export {default as SearchItem} from './SearchItem'
+export {default as InputSelect} from './InputSelect'
 

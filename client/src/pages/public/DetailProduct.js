@@ -6,7 +6,6 @@ import Slider from 'react-slick'
 import ReactImageMagnify from 'react-image-magnify';
 import { formatMoney, renderStarFromNumber } from '../../utils/helpers'
 import { productService } from '../../utils/constants'
-
 const settings = {
     dots: false,
     infinite: false,
@@ -14,29 +13,27 @@ const settings = {
     slidesToShow: 3,
     slidesToScroll:1
 };
-
 const DetailProduct = () => {
+    const [currentImage, setCurrentImage] = useState(null)
     const [relatedProducts, setrelatedProducts] = useState(null)
     const [quantity, setQuantity] = useState(1)
     const [product, setProduct] = useState(null)
     const {pid, title, category} = useParams()
-
     const fetchProductData = async() => {
         const response = await apiGetProduct(pid)
-        if(response.success) setProduct(response.productData)
+        if(response.success) {
+            setProduct(response.productData)
+            setCurrentImage(response.productData?.thumb)
+        }
     }
-    
     const fetchProducts = async () => {
         const response = await apiGetProducts({category})
         if(response.success) setrelatedProducts(response?.products)
     }
-     
-
     useEffect(() => {
         fetchProductData()
         fetchProducts()
     }, [pid])
-
     const handleQuantity = useCallback((number) => {
         if(!Number(number) || Number(number) < 1) {
             return
@@ -51,6 +48,10 @@ const DetailProduct = () => {
         }if (flag === 'plus') {
             setQuantity(prev => +prev + 1)
         }
+    }
+    const handelClickImage = (e, el) => {
+        e.stopPropagation()
+        setCurrentImage(el)
     }
     
     return (
@@ -67,20 +68,20 @@ const DetailProduct = () => {
                         <ReactImageMagnify {...{
                             smallImage: {
                                 isFluidWidth: true,
-                                src: product?.thumb,
+                                src: currentImage,
                             },
                             largeImage: {
                                 width: 800,
                                 height: 800,
-                                src: product?.thumb,
+                                src: currentImage,
                             }
                         }} />
                     </div>
                     <div className='w-full'>
                         <Slider className='images-slider' {...settings}>
                             {product?.images?.map(el => (
-                                <div className='' key={el}>
-                                    <img src={el} alt="" className='w-[148px] h-[148px] p-2 object-contain border'/>
+                                <div onClick={(e) => handelClickImage(e, el)} key={el}>
+                                    <img src={el} alt="" className='w-[143px] h-[143px] p-2 object-contain border'/>
                                 </div>
                             ))}
                         </Slider>

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
-import { Breadcrumb, Product, SearchItem } from '../../components'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Breadcrumb, InputSelect, Product, SearchItem } from '../../components'
 import { apiGetProducts } from '../../apis'
 import Masonry from 'react-masonry-css'
-
+import { options } from '../../utils/constants'
 const breakpointColumnsObj = {
     default: 4,
     1100: 3,
@@ -11,27 +11,60 @@ const breakpointColumnsObj = {
     500: 1
   };
 const Products = () => {
+    const [sort, setSort] = useState('')
     const [products, setProducts] = useState(null)
     const [activeClick, setActiveClick] = useState(null)
-    const [params] = useSearchParams()                  
+    const [params] = useSearchParams()
+    const navigate = useNavigate()                  
     const fetchProductsByCategory = async(queries) => {
         const response = await apiGetProducts(queries)
         if(response.success) setProducts(response.products)
     }
 
     const { category } = useParams()    
+
+    useEffect(() => {
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams({
+                sort
+            }).toString()
+        })
+    }, [sort])
+
     useEffect(() => {
         let param = []
         for(let i of params.entries()) param.push(i)
         const queries = {}
+        let priceQuery ={}
         for(let i of params) queries[i[0]] = i[1]
-        fetchProductsByCategory(queries)
+        if(queries.to && queries.from) {
+            priceQuery = {
+                $and: [
+                    {price: {gte: queries.from}},
+                    {price: {lte: queries.to}}
+                ]
+            }
+        }
+        if(queries.from) queries.price = { gte: queries.from}
+        if(queries.to) queries.price = { lte: queries.to}
+        delete queries.to
+        delete queries.from 
+        delete queries.price
+        const q = {...priceQuery, ...queries}
+        console.log(q)
+        fetchProductsByCategory(q)
     }, [params])
 
     const changeActiveFilter = useCallback((name) => {
         if(activeClick === name) setActiveClick(null)
         else setActiveClick(name)
     }, [activeClick])
+
+    const changeValue = useCallback((value) => {
+        setSort(value)
+    }, [sort])
+    
 
     return (
         <div className='w-full'>
@@ -58,7 +91,12 @@ const Products = () => {
                         />
                     </div>
                 </div>
-                <div className='w-1/5 flex'>Sort by</div>
+                <div className='w-1/5 flex flex-col gap-3'>
+                    <span className='font-semibold text-sm'>Sort by</span>
+                    <div className='w-full'>
+                        <InputSelect value={sort} changeValue={changeValue} options={options}/>
+                    </div>
+                </div>
             </div>
             <div className='w-main m-auto'>
                 <Masonry
