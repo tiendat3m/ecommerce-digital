@@ -4,17 +4,17 @@ import newLabel from '../assets/new.png'
 import trendingLabel from '../assets/trending.png'
 import SelectOption from './SelectOption'
 import icons from '../utils/icons'
-import  {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import path from '../utils/path'
 
-const {AiOutlineMenu, FaRegEye, AiFillHeart} = icons
-const Product = ({productData, isNew}) => {
+const { AiOutlineMenu, FaRegEye, AiFillHeart } = icons
+const Product = ({ productData, isNew, isNormal }) => {
     const [isShowOption, setIsShowOption] = useState(false);
     return (
         <div className='w-full text-base px-[10px]'>
-            <Link 
+            <Link
                 className='w-full border p-[15px] flex flex-col items-center'
-                to={`/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`}
+                to={`/${productData.category?.toLowerCase()}/${productData?._id}/${productData?.title}`}
                 onMouseEnter={(e) => {
                     e.stopPropagation()
                     setIsShowOption(true)
@@ -22,16 +22,16 @@ const Product = ({productData, isNew}) => {
                 onMouseLeave={(e) => {
                     e.stopPropagation()
                     setIsShowOption(false)
-                }}  
+                }}
             >
                 <div className='w-full relative'>
                     {isShowOption && <span className='absolute bottom-[-10px] left-0 right-0 flex items-center justify-center gap-3 animate-slide-top'>
-                        <SelectOption icons={<AiFillHeart/>}/>
-                        <SelectOption icons={<AiOutlineMenu/>}/>
-                        <SelectOption icons={<FaRegEye/>}/>
+                        <SelectOption icons={<AiFillHeart />} />
+                        <SelectOption icons={<AiOutlineMenu />} />
+                        <SelectOption icons={<FaRegEye />} />
                     </span>}
-                    <img src={productData?.thumb || ''} alt="" className='w-[274px] h-[274px] object-cover'/>
-                    <img src={isNew ? newLabel : trendingLabel} alt="" className={`absolute top-[0] right-[0] w-[100px] h-[35px] object-cover`}/>
+                    <img src={productData?.thumb || ''} alt="" className='w-[274px] h-[274px] object-cover' />
+                    {!isNormal && <img src={isNew ? newLabel : trendingLabel} alt="" className={`absolute top-[0] right-[0] w-[100px] h-[35px] object-cover`} />}
                 </div>
                 <div className='flex flex-col gap-1 mt-[15px] items-start w-full'>
                     <span className='flex h-4'>{renderStarFromNumber(productData?.totalRatings)?.map((el, index) => (

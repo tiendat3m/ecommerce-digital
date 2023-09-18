@@ -1,5 +1,5 @@
 import React from 'react'
-import {Outlet} from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Footer, Header, Navigation, TopHeader } from '../../components'
 const Public = () => {
     return (
@@ -7,7 +7,7 @@ const Public = () => {
             <TopHeader />
             <Header />
             <Navigation />
-            <div className='w-main'>
+            <div className='w-full flex flex-col items-center '>
                 <Outlet />
             </div>
             <Footer />

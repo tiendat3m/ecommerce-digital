@@ -1,7 +1,7 @@
 import React from 'react'
 import icons from '../utils/icons'
 
-const {MdEmail, MdLocationOn, BsFillTelephoneFill} = icons
+const { MdEmail, MdLocationOn, BsFillTelephoneFill } = icons
 
 const Footer = () => {
     return (
@@ -13,13 +13,13 @@ const Footer = () => {
                         <small className='text-[13px] text-gray-300'>Subscribe now and receive weekly newsletter</small>
                     </div>
                     <div className='flex-1 flex items-center'>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             className='p-4 pr-0  rounded-l-full w-full bg-[#f04646] outline-none text-gray-100 placeholder:text-sm placeholder:text-gray-200 placeholder:italic placeholder:opacity-50'
                             placeholder='Email Addrress'
                         />
                         <div className='h-[56px] w-[56px]  bg-[#f04646] rounded-r-full  flex items-center justify-center text-white'>
-                            <MdEmail size={16}/>
+                            <MdEmail size={16} />
                         </div>
                     </div>
                 </div>
@@ -29,20 +29,20 @@ const Footer = () => {
                     <div className='flex-2 flex flex-col'>
                         <h3 className='pl-[15px] border-main border-l-4 font-medium mb-5 text-[15px] '>ABOUT US</h3>
                         <div className='mb-[8px] flex items-center gap-1'>
-                            <MdLocationOn/>
+                            <MdLocationOn />
                             <span>Address: </span>
                             <span className='opacity-70'>474 Ontario St Toronto, ON M4X 1M7 Canada</span>
                         </div>
                         <div className='mb-[8px] flex items-center gap-1   '>
-                            <BsFillTelephoneFill/>
+                            <BsFillTelephoneFill />
                             <span>Phone: </span>
                             <span className='opacity-70'>(+1234)56789xxx</span>
                         </div>
                         <div className='mb-[8px] flex items-center gap-1   '>
-                            <MdEmail/>
+                            <MdEmail />
                             <span>Mail: </span>
                             <span className='opacity-70'>tadathemes@gmail.com</span>
-                        </div>  
+                        </div>
                     </div>
                     <div className='flex-1'>
                         <h3 className='pl-[15px] border-main border-l-4 font-medium mb-5 text-[15px] '>INFORMATION</h3>

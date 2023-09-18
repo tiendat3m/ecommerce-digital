@@ -19,7 +19,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const updateCategory = asyncHandler(async (req, res) => {
     const { bcid } = req.params
-    const response = await BlogCategory.findByIdAndUpdate(bcid, req.body, {new: true})
+    const response = await BlogCategory.findByIdAndUpdate(bcid, req.body, { new: true })
     return res.status(200).json({
         success: response ? true : false,
         updatedCategory: response ? response : 'Cannot update blog-category'

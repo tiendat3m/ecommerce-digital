@@ -19,13 +19,13 @@ const data = [
         cate: 'Speaker',
         brand: [],
         image: 'https://digital-world-2.myshopify.com/cdn/shop/products/z2_2_400x.jpg?v=1491404907',
-        
+
     },
     {
         cate: 'Camera',
         brand: [],
         image: 'https://cdn.shopify.com/s/files/1/1636/8779/articles/blog4_345x.jpg',
-        
+
     },
     {
         cate: 'Accessories',
@@ -43,7 +43,7 @@ const data = [
         cate: 'Printer',
         brand: ['Samsung', 'Acer', 'Asus', 'Lenovo', 'Haier'],
         image: 'https://digital-world-2.myshopify.com/cdn/shop/files/printer_300x.jpg?v=1613166810',
-        
+
     },
 ]
 

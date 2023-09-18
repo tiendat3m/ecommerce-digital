@@ -1,0 +1,15 @@
+{
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "One Dark Pro Darker",
+  "explorer.confirmDelete": false,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "emmet.preferences": {},
+  "editor.wordWrap": "on",
+  "notebook.output.wordWrap": true,
+  "editor.formatOnSave": false,
+   "[javascript]": {
+       "editor.formatOnSave": true
+   }
+}

@@ -38,7 +38,7 @@ var blogSchema = new mongoose.Schema({
         type: String,
         default: 'Admin'
     }
-},{
+}, {
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

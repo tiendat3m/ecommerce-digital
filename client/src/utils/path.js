@@ -4,11 +4,10 @@ const path = {
     ALL: '*',
     FAQ: 'faqs',
     LOGIN: 'login',
-    PRODUCTS: 'products',
+    PRODUCTS: ':category',
     BLOGS: 'blogs',
     OUR_SERVICES: 'services',
-    DETAIL_PRODUCT_PID_TITLE: 'san-pham/:pid/:title',
-    DETAIL_PRODUCT: 'san-pham',
+    DETAIL_PRODUCT__CATEGORY__PID__TITLE: ':category/:pid/:title',
     FINAL_REGISTER: 'finalregister/:status',
     RESET_PASSWORD: 'reset-password/:token',
 }

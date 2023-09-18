@@ -19,7 +19,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const updateCategory = asyncHandler(async (req, res) => {
     const { pcid } = req.params
-    const response = await ProductCategory.findByIdAndUpdate(pcid, req.body, {new: true})
+    const response = await ProductCategory.findByIdAndUpdate(pcid, req.body, { new: true })
     return res.status(200).json({
         success: response ? true : false,
         updatedCategory: response ? response : 'Cannot update product-category'
