@@ -1,7 +1,7 @@
 import path from "./path"
-import icons  from "./icons"
+import icons from "./icons"
 
-export const  navigation = [
+export const navigation = [
     {
         id: 1,
         value: 'HOME',
@@ -28,37 +28,37 @@ export const  navigation = [
         path: `/${path.FAQ}`
     },
 ]
-const {BsShieldShaded,  FaTty, BsTruck, BsFillGiftFill, BsReplyFill} = icons
+const { BsShieldShaded, FaTty, BsTruck, BsFillGiftFill, BsReplyFill } = icons
 export const productService = [
     {
         id: 1,
         title: 'Guarantee',
         sub: 'Quality Checked',
-        icon:  <BsShieldShaded  size={19}/>,
+        icon: <BsShieldShaded size={19} />,
     },
     {
         id: 2,
         title: 'Free Shipping',
         sub: 'Free On All Products',
-        icon:  <BsTruck  size={19}/>,
+        icon: <BsTruck size={19} />,
     },
     {
         id: 3,
         title: 'Special Gift Cards',
         sub: 'Special Gift Cards',
-        icon:  <BsFillGiftFill size={19} />,
+        icon: <BsFillGiftFill size={19} />,
     },
     {
         id: 4,
         title: 'Free Return',
         sub: 'Within 7 Days',
-        icon:  <BsReplyFill  size={19}/>,
+        icon: <BsReplyFill size={19} />,
     },
     {
         id: 5,
         title: 'Consultancy',
         sub: 'Lifetime 24/7/356',
-        icon:  <FaTty  size={19}/>,
+        icon: <FaTty size={19} />,
     },
 ]
 
@@ -116,10 +116,6 @@ export const productTabs = [
         Customers are able to pick the next available delivery day that best fits their schedule. However, to route stops as efficiently as possible, Shopify Shop will provide the time frame. Customers will not be able to choose a time. You will be notified in advance of your scheduled time frame. Please make sure that a responsible adult (18 years or older) will be home at that time.
         In preparation for your delivery, please remove existing furniture, pictures, mirrors, accessories, etc. to prevent damages. Also insure that the area where you would like your furniture placed is clear of any old furniture and any other items that may obstruct the passageway of the delivery team. Shopify Shop will deliver, assemble, and set-up your new furniture purchase and remove all packing materials from your home. Our delivery crews are not permitted to move your existing furniture or other household items. Delivery personnel will attempt to deliver the purchased items in a safe and controlled manner but will not attempt to place furniture if they feel it will result in damage to the product or your home. Delivery personnel are unable to remove doors, hoist furniture or carry furniture up more than 3 flights of stairs. An elevator must be available for deliveries to the 4th floor and above.`
     },
-    {
-        id: 5,
-        name: 'CUSTOMER REVIEW'
-    }
 ]
 
 export const colors = [
@@ -132,7 +128,7 @@ export const colors = [
     'orange',
     'purple',
     'green',
-    'blue'   
+    'blue'
 ]
 
 export const options = [
@@ -171,4 +167,27 @@ export const options = [
         value: 'createdAt',
         text: 'Date, new to old'
     }
+]
+
+export const voteOptions = [
+    {
+        id: 1,
+        text: 'Perfect'
+    },
+    {
+        id: 2,
+        text: 'Good'
+    },
+    {
+        id: 3,
+        text: 'Normal'
+    },
+    {
+        id: 4,
+        text: 'Bad'
+    },
+    {
+        id: 5,
+        text: 'Terrible'
+    },
 ]

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { apiGetProduct, apiGetProducts } from '../../apis'
 import { Breadcrumb, Button, CustomSlider, ProductInfo, ProductService, SelectQuantity } from '../../components'
@@ -11,41 +11,44 @@ const settings = {
     infinite: false,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll:1
+    slidesToScroll: 1
 };
 const DetailProduct = () => {
     const [currentImage, setCurrentImage] = useState(null)
     const [relatedProducts, setrelatedProducts] = useState(null)
     const [quantity, setQuantity] = useState(1)
     const [product, setProduct] = useState(null)
-    const {pid, title, category} = useParams()
-    const fetchProductData = async() => {
+    const { pid, title, category } = useParams()
+    const fetchProductData = async () => {
         const response = await apiGetProduct(pid)
-        if(response.success) {
+        if (response.success) {
             setProduct(response.productData)
             setCurrentImage(response.productData?.thumb)
         }
     }
     const fetchProducts = async () => {
-        const response = await apiGetProducts({category})
-        if(response.success) setrelatedProducts(response?.products)
+        const response = await apiGetProducts({ category })
+        if (response.success) setrelatedProducts(response?.products)
     }
     useEffect(() => {
-        fetchProductData()
-        fetchProducts()
+        if (pid) {
+            fetchProductData()
+            fetchProducts()
+        }
+        window.scrollTo(0, 0)
     }, [pid])
     const handleQuantity = useCallback((number) => {
-        if(!Number(number) || Number(number) < 1) {
+        if (!Number(number) || Number(number) < 1) {
             return
-        }else {
+        } else {
             setQuantity(number)
         }
     }, [quantity])
     const handleChangeQuantity = (flag) => {
-        if(flag === 'minus' && quantity === 1) return
-        if(flag === 'minus') {
+        if (flag === 'minus' && quantity === 1) return
+        if (flag === 'minus') {
             setQuantity(prev => +prev - 1)
-        }if (flag === 'plus') {
+        } if (flag === 'plus') {
             setQuantity(prev => +prev + 1)
         }
     }
@@ -53,13 +56,13 @@ const DetailProduct = () => {
         e.stopPropagation()
         setCurrentImage(el)
     }
-    
+
     return (
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main flex gap-2 flex-col'>
                     <span className='font-semibold'>{title}</span>
-                    <Breadcrumb title={title} category={product?.category}/>
+                    <Breadcrumb title={title} category={product?.category} />
                 </div>
             </div>
             <div className='w-main flex m-auto mt-4 gap-8'>
@@ -81,7 +84,7 @@ const DetailProduct = () => {
                         <Slider className='images-slider' {...settings}>
                             {product?.images?.map(el => (
                                 <div onClick={(e) => handelClickImage(e, el)} key={el}>
-                                    <img src={el} alt="" className='w-[143px] h-[143px] p-2 object-contain border'/>
+                                    <img src={el} alt="" className='w-[143px] h-[143px] p-2 object-contain border' />
                                 </div>
                             ))}
                         </Slider>
@@ -104,7 +107,7 @@ const DetailProduct = () => {
                         ))}
                     </ul>
                     <div className='flex flex-col gap-8'>
-                        <span className='flex items-center gap-2'><span className='font-semibold'>Quantity: </span><SelectQuantity quantity={quantity} handleQuantity={handleQuantity} handleChangeQuantity={handleChangeQuantity}/></span>
+                        <span className='flex items-center gap-2'><span className='font-semibold'>Quantity: </span><SelectQuantity quantity={quantity} handleQuantity={handleQuantity} handleChangeQuantity={handleChangeQuantity} /></span>
                         <Button fw>
                             Add to cart
                         </Button>
@@ -112,17 +115,17 @@ const DetailProduct = () => {
                 </div>
                 <div className='w-1/5'>
                     {productService?.map((el) => (
-                        <ProductService key={el.id} title={el.title} sub={el.sub} icon={el.icon}/>
+                        <ProductService key={el.id} title={el.title} sub={el.sub} icon={el.icon} />
                     ))}
                 </div>
             </div>
             <div className='w-main mt-8 m-auto'>
-                <ProductInfo />
+                <ProductInfo totalRatings={product?.totalRatings} totalCount={18} productName={product?.title} />
             </div>
 
             <div className='w-main mt-8 m-auto'>
                 <h3 className='text-[20px] py-[15px] border-b-2 border-main font-semibold mb-4'>OTHER CUSTOMERS ALSO BUY:</h3>
-                <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true} slidesToShow={4}/></div>
+                <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true} slidesToShow={4} /></div>
             </div>
             <div className='h-[400px]'></div>
         </div>
