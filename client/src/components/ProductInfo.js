@@ -1,15 +1,60 @@
-import React, { useState } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 import { productTabs } from '../utils/constants'
 import VoteBar from './VoteBar'
 import { renderStarFromNumber } from '../utils/helpers'
 import Button from './Button'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { showModal } from '../store/app/appSlice'
 import VoteOption from './VoteOption'
+import { apiRatings } from '../apis'
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom'
+import path from '../utils/path'
 
-const ProductInfo = ({ totalRatings, totalCount, productName }) => {
+const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
     const [activeTabs, setActiveTabs] = useState(1)
+    const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { isLoggedIn } = useSelector(state => state.user)
+    console.log(isLoggedIn)
+    const [payload, setPayload] = useState({
+        comment: '',
+        score: ''
+    })
+    const handleSumbitVoteOption = async ({ comment, score }) => {
+        if (!comment || !pid || !score) {
+            alert('Please vote before submit')
+            return
+        }
+        await apiRatings({ comment, star: score, pid })
+        dispatch(showModal({ isShowModal: false, modalChildren: null }))
+        rerender()
+    }
+
+    const handleVoteNow = () => {
+        if (!isLoggedIn) {
+            Swal.fire({
+                text: 'Login to vote',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Go login',
+                showCancelButton: true,
+                title: 'Opps'
+            }).then((rs) => {
+                if (rs.isConfirmed) navigate(`/${path.LOGIN}`)
+            })
+        } else {
+            dispatch(
+                showModal({
+                    isShowModal: true,
+                    modalChildren:
+                        <VoteOption
+                            productName={productName}
+                            handleSumbitVoteOption={handleSumbitVoteOption}
+                        />
+                }))
+        }
+    }
+
 
     return (
         <div>
@@ -41,16 +86,15 @@ const ProductInfo = ({ totalRatings, totalCount, productName }) => {
                             <span className='flex items-center gap-1'>{renderStarFromNumber(totalRatings)?.map((el, index) => (
                                 <span key={index}>{el}</span>
                             ))}</span>
-                            <span className='text-[16px]'>{`${totalCount} Reviewers`}</span>
+                            <span className='text-[16px]'>{`${ratings.length} Reviewers`}</span>
                         </div>
                         <div className='flex-6 border flex flex-col p-4'>
-                            {Array.from(Array(5).keys()).reverse()?.map(el => (
-                                <span>
+                            {Array.from(Array(5).keys()).reverse()?.map((el, index) => (
+                                <span key={el}>
                                     <VoteBar
-                                        key={el}
                                         number={el + 1}
-                                        ratingCount={2}
-                                        ratingTotal={5}
+                                        ratingCount={ratings?.filter(i => i.star === el + 1).length}
+                                        ratingTotal={ratings?.length}
                                     />
                                 </span>
                             ))}
@@ -58,7 +102,11 @@ const ProductInfo = ({ totalRatings, totalCount, productName }) => {
                     </div>
                     <div className='flex flex-col gap-2 items-center justify-center mt-4'>
                         <span>Do you review this product?</span>
-                        <Button handleOnclick={() => dispatch(showModal({ isShowModal: true, modalChildren: <VoteOption productName={productName} /> }))}>Vote Now!</Button>
+                        <Button
+                            handleOnclick={handleVoteNow}
+                        >
+                            Vote Now!
+                        </Button>
                     </div>
                 </div>}
             </div>
@@ -66,4 +114,4 @@ const ProductInfo = ({ totalRatings, totalCount, productName }) => {
     )
 }
 
-export default ProductInfo
+export default memo(ProductInfo)

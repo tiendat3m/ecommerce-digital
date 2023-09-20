@@ -172,11 +172,11 @@ export const options = [
 export const voteOptions = [
     {
         id: 1,
-        text: 'Perfect'
+        text: 'Terrible'
     },
     {
         id: 2,
-        text: 'Good'
+        text: 'Bad'
     },
     {
         id: 3,
@@ -184,10 +184,10 @@ export const voteOptions = [
     },
     {
         id: 4,
-        text: 'Bad'
+        text: 'Good'
     },
     {
         id: 5,
-        text: 'Terrible'
+        text: 'Perfect'
     },
 ]
