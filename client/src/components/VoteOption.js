@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import logo from '../assets/logo.png'
 import { AiFillStar } from 'react-icons/ai'
 import { voteOptions } from '../utils/constants'
+import Comment from './Comment'
 import Button from './Button'
 const VoteOption = ({ productName, handleSumbitVoteOption }) => {
     const [chosenScore, setChosenScore] = useState(null)
@@ -43,6 +44,7 @@ const VoteOption = ({ productName, handleSumbitVoteOption }) => {
                 </div>
             </div>
             <Button fw handleOnclick={() => handleSumbitVoteOption({ comment, score })}>Submit</Button>
+
         </div>
     )
 }

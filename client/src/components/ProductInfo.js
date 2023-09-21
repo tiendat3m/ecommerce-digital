@@ -10,6 +10,7 @@ import { apiRatings } from '../apis'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
 import path from '../utils/path'
+import Comment from './Comment'
 
 const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
     const [activeTabs, setActiveTabs] = useState(1)
@@ -107,6 +108,17 @@ const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
                         >
                             Vote Now!
                         </Button>
+                    </div>
+                    <div className='flex flex-col gap-4'>
+                        {ratings.map(el => (
+                            <Comment
+                                key={el?._id}
+                                star={el.star}
+                                updatedAt={el.updatedAt}
+                                comment={el.comment}
+                                name={'Anonymous'}
+                            />
+                        ))}
                     </div>
                 </div>}
             </div>
