@@ -56,7 +56,6 @@ var productSchema = new mongoose.Schema({
             comment: { type: String },
             updatedAt: {
                 type: Date,
-                default: Date.now()
             }
         }
     ],

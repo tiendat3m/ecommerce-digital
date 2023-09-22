@@ -20,7 +20,7 @@ const Comment = ({ name, comment, updatedAt, star }) => {
                             <span key={index}>{el}</span>
                         ))}</span>
                     </span>
-                    <span className='flex items-center gap-1'>
+                    <span className='flex gap-1'>
                         <span className='font-semibold'>Comment: </span>
                         <span className='flex items-center gap 1'>{comment}</span>
                     </span>

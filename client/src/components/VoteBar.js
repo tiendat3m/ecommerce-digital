@@ -16,7 +16,7 @@ const VoteBar = ({ number, ratingCount, ratingTotal }) => {
             </div>
             <div className='w-[75%]'>
                 <div className='w-full h-[6px] rounded-l-full relative rounded-r-full bg-gray-200'>
-                    <div ref={percentRef} className=' bg-red-500 inset-0 absolute rounded-r-full rounded-l-full '></div>
+                    <div ref={percentRef} className=' bg-red-600 inset-0 absolute rounded-r-full rounded-l-full '></div>
                 </div>
             </div>
             <div className='w-[15%]'>

@@ -4,8 +4,8 @@ const { PromiseProvider } = require('mongoose')
 const slugify = require('slugify')
 
 const createProduct = asyncHandler(async (req, res) => {
-    if(Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    if(req.body && req.body.title) req.body.slug = slugify(req.body.title)
+    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
+    if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
     const newProduct = await Product.create(req.body)
     return res.status(200).json({
         success: newProduct ? true : false,
@@ -15,7 +15,13 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const getProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
-    const product = await Product.findById(pid)
+    const product = await Product.findById(pid).populate({
+        path: 'ratings',
+        populate: {
+            path: 'postedBy',
+            select: 'firstname lastname avatar'
+        }
+    })
     return res.status(200).json({
         success: product ? true : false,
         productData: product ? product : 'Cannot get new product'
@@ -24,7 +30,7 @@ const getProduct = asyncHandler(async (req, res) => {
 
 //filtering, sorting, pagination
 const getProducts = asyncHandler(async (req, res) => {
-    const queries = {...req.query}
+    const queries = { ...req.query }
 
     //tách các trường đặc biệt ra khỏi query
     const excludeFields = ['limit', 'sort', 'page', 'fields']
@@ -36,24 +42,24 @@ const getProducts = asyncHandler(async (req, res) => {
     const formatedQueries = JSON.parse(queryString)
     let colorQueryObject = {}
     // filtering
-    if(queries?.title) formatedQueries.title = {$regex: queries.title, $options: 'i'}
-    if(queries?.category) formatedQueries.category = {$regex: queries.category, $options: 'i'}
-    if(queries?.color) {
+    if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
+    if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
+    if (queries?.color) {
         delete formatedQueries.color
-        const colorArr =  queries.color?.split(',')
-        const colorQuery = colorArr .map(el => ({ color: {$regex: el, $options: 'i'} }))
+        const colorArr = queries.color?.split(',')
+        const colorQuery = colorArr.map(el => ({ color: { $regex: el, $options: 'i' } }))
         colorQueryObject = { $or: colorQuery }
     }
-    const q = { ...colorQueryObject, ...formatedQueries}
+    const q = { ...colorQueryObject, ...formatedQueries }
     let queryCommand = Product.find(q)
-    
+
     // sorting
-    if(req.query.sort) {
+    if (req.query.sort) {
         const sortBy = req.query.sort.split(',').join(' ')
         queryCommand = queryCommand.sort(sortBy)
     }
     // fields
-    if(req.query.fields) {
+    if (req.query.fields) {
         const fields = req.query.fields.split(',').join(' ')
         queryCommand = queryCommand.select(fields)
     }
@@ -82,8 +88,8 @@ const getProducts = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
-    if(req.body && req.body.title) req.body.slug = slugify(req.body.title)
-    const updateProduct = await Product.findByIdAndUpdate(pid, req.body, {new: true})
+    if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
+    const updateProduct = await Product.findByIdAndUpdate(pid, req.body, { new: true })
     return res.status(200).json({
         success: updateProduct ? true : false,
         updateProduct: updateProduct ? updateProduct : 'Cannot update product'
@@ -102,24 +108,24 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 const ratings = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { star, comment, pid } = req.body
+    const { star, comment, pid, updatedAt } = req.body
 
-    if(!star || !pid) throw new Error('Missing inputs')
+    if (!star || !pid) throw new Error('Missing inputs')
     const ratingProduct = await Product.findById(pid)
     const alreadyRating = ratingProduct?.ratings?.find(el => el.postedBy.toString() === _id)
-    console.log({alreadyRating})
-    if(alreadyRating) {
+    console.log({ alreadyRating })
+    if (alreadyRating) {
         // update star and comment
         await Product.updateOne({
-            ratings: {$elemMatch: alreadyRating}
+            ratings: { $elemMatch: alreadyRating }
         }, {
-            $set: {'ratings.$.star': star, 'ratings.$.comment': comment}
-        }, {new: true})
-    }else {
+            $set: { 'ratings.$.star': star, 'ratings.$.comment': comment, 'ratings.$.updatedAt': updatedAt }
+        }, { new: true })
+    } else {
         // add star and comment
         await Product.findByIdAndUpdate(pid, {
-            $push: {ratings: {star, comment, postedBy: _id}}
-        }, {new: true})
+            $push: { ratings: { star, comment, postedBy: _id, updatedAt } }
+        }, { new: true })
     }
 
     // sum ratings
@@ -137,8 +143,8 @@ const ratings = asyncHandler(async (req, res) => {
 
 const uploadImagesProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
-    if(!req.files) throw new Error('Missing input')
-    const response = await Product.findByIdAndUpdate(pid, { $push: { images: { $each: req.files.map(el => el.path) } } }, {new: true})
+    if (!req.files) throw new Error('Missing input')
+    const response = await Product.findByIdAndUpdate(pid, { $push: { images: { $each: req.files.map(el => el.path) } } }, { new: true })
     return res.status(200).json({
         status: response ? true : false,
         updatedProduct: response ? response : 'Cannot upload images product'

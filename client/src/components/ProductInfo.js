@@ -17,7 +17,6 @@ const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { isLoggedIn } = useSelector(state => state.user)
-    console.log(isLoggedIn)
     const [payload, setPayload] = useState({
         comment: '',
         score: ''
@@ -27,7 +26,8 @@ const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
             alert('Please vote before submit')
             return
         }
-        await apiRatings({ comment, star: score, pid })
+        const response = await apiRatings({ comment, star: score, pid, updatedAt: Date.now() })
+        console.log(response)
         dispatch(showModal({ isShowModal: false, modalChildren: null }))
         rerender()
     }
@@ -70,57 +70,53 @@ const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
                     </span>
 
                 ))}
-                <span
-                    className={`px-4 py-2 cursor-pointer  ${activeTabs === 5 ? 'bg-white border border-b-0' : 'bg-gray-200'}`}
-                    onClick={() => setActiveTabs(5)}
 
-                >
-                    CUSTOMER REVIEW
-                </span>
             </div>
             <div className='w-full p-4 border'>
                 {productTabs?.some(el => el.id === activeTabs) && productTabs.find(el => el.id === activeTabs)?.content}
-                {activeTabs === 5 && <div className='flex flex-col p-4'>
-                    <div className='flex'>
-                        <div className='flex-4 border flex flex-col items-center justify-center gap-1 border-red-500'>
-                            <span className='font-semibold text-[30px]'>{`${totalRatings}/5`}</span>
-                            <span className='flex items-center gap-1'>{renderStarFromNumber(totalRatings)?.map((el, index) => (
-                                <span key={index}>{el}</span>
-                            ))}</span>
-                            <span className='text-[16px]'>{`${ratings.length} Reviewers`}</span>
-                        </div>
-                        <div className='flex-6 border flex flex-col p-4'>
-                            {Array.from(Array(5).keys()).reverse()?.map((el, index) => (
-                                <span key={el}>
-                                    <VoteBar
-                                        number={el + 1}
-                                        ratingCount={ratings?.filter(i => i.star === el + 1).length}
-                                        ratingTotal={ratings?.length}
-                                    />
-                                </span>
-                            ))}
-                        </div>
+            </div>
+
+            <div className='flex flex-col p-4 border mt-8'>
+                <div className='flex border'>
+                    <div className='flex-4  flex flex-col items-center justify-center gap-1 '>
+                        <span className='font-semibold text-[30px]'>{`${totalRatings}/5`}</span>
+                        <span className='flex items-center gap-1'>{renderStarFromNumber(totalRatings)?.map((el, index) => (
+                            <span key={index}>{el}</span>
+                        ))}</span>
+                        <span className='text-[16px]'>{`${ratings?.length} Reviewers`}</span>
                     </div>
-                    <div className='flex flex-col gap-2 items-center justify-center mt-4'>
-                        <span>Do you review this product?</span>
-                        <Button
-                            handleOnclick={handleVoteNow}
-                        >
-                            Vote Now!
-                        </Button>
-                    </div>
-                    <div className='flex flex-col gap-4'>
-                        {ratings.map(el => (
-                            <Comment
-                                key={el?._id}
-                                star={el.star}
-                                updatedAt={el.updatedAt}
-                                comment={el.comment}
-                                name={'Anonymous'}
-                            />
+                    <div className='flex-6 border flex flex-col p-4'>
+                        {Array.from(Array(5).keys()).reverse()?.map((el, index) => (
+                            <span key={el}>
+                                <VoteBar
+                                    number={el + 1}
+                                    ratingCount={ratings?.filter(i => i.star === el + 1).length}
+                                    ratingTotal={ratings?.length}
+                                />
+                            </span>
                         ))}
                     </div>
-                </div>}
+                </div>
+                <div className='flex flex-col gap-2 items-center justify-center mt-4'>
+                    <span>Do you review this product?</span>
+                    <Button
+                        handleOnclick={handleVoteNow}
+                    >
+                        Vote Now!
+                    </Button>
+
+                </div>
+                <div className='flex flex-col gap-4'>
+                    {ratings?.map(el => (
+                        <Comment
+                            key={el._id}
+                            star={el.star}
+                            updatedAt={el.updatedAt}
+                            comment={el.comment}
+                            name={`${el.postedBy?.lastname} ${el.postedBy?.firstname}`}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     )

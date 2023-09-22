@@ -15,7 +15,7 @@ const settings = {
 };
 const DetailProduct = () => {
     const [currentImage, setCurrentImage] = useState(null)
-    const [relatedProducts, setrelatedProducts] = useState(null)
+    const [relatedProducts, setRelatedProducts] = useState(null)
     const [product, setProduct] = useState(null)
     const [update, setUpdate] = useState(false)
     const [quantity, setQuantity] = useState(1)
@@ -29,7 +29,7 @@ const DetailProduct = () => {
     }
     const fetchProducts = async () => {
         const response = await apiGetProducts({ category })
-        if (response.success) setrelatedProducts(response?.products)
+        if (response.success) setRelatedProducts(response?.products)
     }
     useEffect(() => {
         if (pid) {
@@ -39,8 +39,7 @@ const DetailProduct = () => {
         window.scrollTo(0, 0)
     }, [pid])
     useEffect(() => {
-        if (pid)
-            fetchProductData()
+        if (pid) fetchProductData()
     }, [update])
     const rerender = useCallback(() => {
         setUpdate(!update)
