@@ -19,18 +19,19 @@ const Products = () => {
     const fetchProductsByCategory = async (queries) => {
         const response = await apiGetProducts(queries)
         if (response.success) setProducts(response)
-        console.log(response)
     }
 
     const { category } = useParams()
 
     useEffect(() => {
-        navigate({
-            pathname: `/${category}`,
-            search: createSearchParams({
-                sort
-            }).toString()
-        })
+        if (sort) {
+            navigate({
+                pathname: `/${category}`,
+                search: createSearchParams({
+                    sort
+                }).toString()
+            })
+        }
     }, [sort])
 
     useEffect(() => {
@@ -46,15 +47,17 @@ const Products = () => {
                     { price: { lte: queries.to } }
                 ]
             }
+
+            delete queries.price
+        } else {
+            if (queries.from) queries.price = { gte: queries.from }
+            if (queries.to) queries.price = { lte: queries.to }
         }
-        if (queries.from) queries.price = { gte: queries.from }
-        if (queries.to) queries.price = { lte: queries.to }
         delete queries.to
         delete queries.from
-        delete queries.price
         const q = { ...priceQuery, ...queries }
-        console.log(q)
         fetchProductsByCategory(q)
+
     }, [params])
 
     const changeActiveFilter = useCallback((name) => {

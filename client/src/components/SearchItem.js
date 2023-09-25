@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react'
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import icons from '../utils/icons'
 import { colors } from '../utils/constants'
 import { apiGetProducts } from '../apis'
@@ -12,6 +12,7 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
     const [bestPrice, setBestPrice] = useState(null)
     const [selected, setSelected] = useState([])
     const { category } = useParams()
+    const [params] = useSearchParams()
     const navigate = useNavigate()
     const [price, setPrice] = useState({
         from: '',
@@ -37,28 +38,36 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
     // }, [price])
 
     useEffect(() => {
+        let param = []
+        for (let i of params.entries()) param.push(i)
+        const queries = {}
+        for (let i of param) queries[i[0]] = i[1]
         if (selected.length > 0) {
-            navigate({
-                pathname: `/${category}`,
-                search: createSearchParams({
-                    color: selected.join(',')
-                }).toString()
-            })
-        } else {
-            navigate(`/${category}`)
-        }
+            queries.color = selected.join(',')
+            queries.page = 1
+        } else delete queries.color
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams(queries).toString()
+        })
     }, [selected])
 
     const debouncePriceFrom = useDebounce(price.from, 500)
     const debouncePriceTo = useDebounce(price.to, 500)
 
     useEffect(() => {
-        const data = {}
-        if (Number(price.from) > 0) data.from = price.from
-        if (Number(price.to) > 0) data.to = price.to
+        let param = []
+        for (let i of params.entries()) param.push(i)
+        const queries = {}
+        for (let i of param) queries[i[0]] = i[1]
+        if (Number(price.from) > 0) queries.from = price.from
+        else delete queries.from
+        if (Number(price.to) > 0) queries.to = price.to
+        else delete queries.to
+        queries.page = 1
         navigate({
             pathname: `/${category}`,
-            search: createSearchParams(data).toString()
+            search: createSearchParams(queries).toString()
         })
     }, [debouncePriceFrom, debouncePriceTo])
     return (
@@ -85,6 +94,7 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     setSelected([])
+                                    changeActiveFilter(null)
                                 }}
                                 className='underline hover:text-main'>
                                 Reset
@@ -126,7 +136,7 @@ const SearchItem = ({ name, activeClick, changeActiveFilter, type = 'checkbox' }
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     setPrice({ from: '', to: '' })
-                                    // changeActiveFilter(null)
+                                    changeActiveFilter(null)
                                 }}
                                 className='underline hover:text-main'>
                                 Reset
