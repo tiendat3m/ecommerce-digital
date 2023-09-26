@@ -1,16 +1,18 @@
 import React, { memo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import path from '../utils/path'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCurrent } from '../store/user/asyncActions'
 import icons from '../utils/icons'
-import { logout } from '../store/user/userSlice'
+import { logout, clearMessage } from '../store/user/userSlice'
+import Swal from 'sweetalert2'
 
 const { AiOutlineLogout } = icons
 
 const TopHeader = () => {
     const dispatch = useDispatch()
-    const { isLoggedIn, current } = useSelector(state => state.user)
+    const navigate = useNavigate()
+    const { isLoggedIn, current, mes } = useSelector(state => state.user)
     useEffect(() => {
         let setTimeOutId = setTimeout(() => {
             if (isLoggedIn) dispatch(getCurrent())
@@ -19,6 +21,12 @@ const TopHeader = () => {
             clearTimeout(setTimeOutId)
         }
     }, [dispatch, isLoggedIn])
+    useEffect(() => {
+        if (mes) Swal.fire('Opps!', mes, 'info').then(() => {
+            dispatch(clearMessage())
+            navigate(`/${path.LOGIN}`)
+        })
+    }, [mes])
     return (
         <div className='w-full bg-main h-[38px] flex items-center justify-center'>
             <div className='w-main flex justify-between text-xs text-white'>

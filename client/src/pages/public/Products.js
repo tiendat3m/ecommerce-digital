@@ -23,16 +23,6 @@ const Products = () => {
 
     const { category } = useParams()
 
-    useEffect(() => {
-        if (sort) {
-            navigate({
-                pathname: `/${category}`,
-                search: createSearchParams({
-                    sort
-                }).toString()
-            })
-        }
-    }, [sort])
 
     useEffect(() => {
         let param = []
@@ -67,6 +57,16 @@ const Products = () => {
 
     const changeValue = useCallback((value) => {
         setSort(value)
+    }, [sort])
+    useEffect(() => {
+        if (sort) {
+            navigate({
+                pathname: `/${category}`,
+                search: createSearchParams({
+                    sort
+                }).toString()
+            })
+        }
     }, [sort])
 
 

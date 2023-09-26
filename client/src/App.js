@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword } from './pages/public';
+import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct } from './pages/admin';
+import { MemberLayout, Personal } from './pages/member';
 import { Modal } from './components';
 import path from './utils/path';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +27,17 @@ function App() {
           <Route path={path.OUR_SERVICES} element={<Services />} />
           <Route path={path.PRODUCTS} element={<Products />} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
+          <Route path={path.ALL} element={<Home />} />
+        </Route>
+        <Route path={path.ADMIN} element={<AdminLayout />}>
+          <Route path={path.DASHBOARD} element={<DashBoard />} />
+          <Route path={path.MANAGER_USER} element={<ManageUser />} />
+          <Route path={path.MANAGER_PRODUCT} element={<ManageProduct />} />
+          <Route path={path.MANAGER_ORDER} element={<ManageOrder />} />
+          <Route path={path.CREATE_PRODUCT} element={<CreateProduct />} />
+        </Route>
+        <Route path={path.MEMBER} element={<MemberLayout />}>
+          <Route path={path.PERSONAL} element={<Personal />} />
         </Route>
         <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
