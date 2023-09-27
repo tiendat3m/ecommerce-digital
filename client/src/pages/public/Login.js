@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import InputField from '../../components/InputField'
-import { Button, Loading } from '../../components';
-import { apiLogin, apiRegister, apiForgotPassword, apiFinalRegister } from '../../apis/user';
+import InputField from '../../components/inputs/InputField'
+import { Button, Loading } from 'components';
+import { apiLogin, apiRegister, apiForgotPassword, apiFinalRegister } from 'apis/user';
 import Swal from 'sweetalert2'
 import { Link, useNavigate } from 'react-router-dom'
-import path from '../../utils/path'
-import { login } from '../../store/user/userSlice';
+import path from 'utils/path'
+import { login } from 'store/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { validate } from '../../utils/helpers';
-import { showModal } from '../../store/app/appSlice';
+import { validate } from 'utils/helpers';
+import { showModal } from 'store/app/appSlice';
 const Login = () => {
 
     const dispatch = useDispatch()

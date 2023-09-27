@@ -192,6 +192,53 @@ const resetPassword = asyncHandler(async (req, res) => {
 })
 
 const getUsers = asyncHandler(async (req, res) => {
+    const queries = { ...req.query }
+
+    //tách các trường đặc biệt ra khỏi query
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(el => delete queries[el])
+
+    //format lại các operator cho đúng cú pháp của mongoose
+    let queryString = JSON.stringify(queries)
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchedEl => `$${matchedEl}`)
+    const formatedQueries = JSON.parse(queryString)
+    // filtering
+    if (queries?.name) formatedQueries.name = { $regex: queries.name, $options: 'i' }
+    if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
+
+    let queryCommand = User.find(formatedQueries)
+
+    // sorting
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    // fields
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+
+    // pagination
+    // limit: số object lấy về khi gọi api
+    // skip: 
+    // page=2&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || process.env.LIMIT_PRODUCT;
+    const skip = (page - 1) * limit;
+
+    queryCommand = queryCommand.skip(skip).limit(limit);
+
+    //execute query
+    queryCommand.exec(async (err, response) => {
+        if (err) throw new Error(err.message)
+        const counts = await User.find(formatedQueries).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            products: response ? response : 'Cannot get product',
+        })
+    })
     const response = await User.find().select('-refreshToken -password -role')
     return res.status(200).json({
         success: response ? true : false,

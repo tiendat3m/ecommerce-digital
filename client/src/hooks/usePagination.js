@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { generateRange } from '../utils/helpers'
+import { generateRange } from 'utils/helpers'
 
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 const usePagination = (totalProductCount, currentPage, siblingCount = 1) => {

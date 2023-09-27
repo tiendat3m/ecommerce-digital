@@ -191,3 +191,52 @@ export const voteOptions = [
         text: 'Perfect'
     },
 ]
+
+const { AiOutlineDashboard,
+    MdOutlineGroup,
+    RiProductHuntLine,
+    RiBillLine } = icons
+export const adminSidebar = [
+    {
+        id: 1,
+        type: 'SINGLE',
+        text: 'Dashboard',
+        path: `/${path.ADMIN}/${path.DASHBOARD}`,
+        icon: <AiOutlineDashboard size={20} />
+    },
+    {
+        id: 2,
+        type: 'SINGLE',
+        text: 'Manage User',
+        path: `/${path.ADMIN}/${path.MANAGER_USER}`,
+        icon: <MdOutlineGroup size={20} />
+
+    },
+    {
+        id: 3,
+        type: 'PARENT',
+        text: 'Manage Product',
+        path: `/${path.ADMIN}/${path.MANAGER_PRODUCT}`,
+        icon: <RiProductHuntLine size={20} />,
+        submenu: [
+            {
+                text: 'Create Product',
+                path: `/${path.ADMIN}/${path.CREATE_PRODUCT}`
+            },
+            {
+                text: 'Manage Product',
+                path: `/${path.ADMIN}/${path.MANAGER_PRODUCT}`
+            },
+        ],
+
+
+    },
+    {
+        id: 4,
+        type: 'SINGLE',
+        text: 'Manage Order',
+        path: `/${path.ADMIN}/${path.MANAGER_ORDER}`,
+        icon: <RiBillLine size={20} />
+
+    },
+]
