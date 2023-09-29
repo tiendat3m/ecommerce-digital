@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/sendMail')
 const crypto = require('crypto')
 const makeToken = require('uniqid')
-
+const { users } = require('../utils/constant')
 // const register = asyncHandler(async (req, res) => {
 //     const { email, password, firstname, lastname } = req.body
 //     if(!email || !password || !firstname || !lastname) 
@@ -219,10 +219,7 @@ const getUsers = asyncHandler(async (req, res) => {
         queryCommand = queryCommand.select(fields)
     }
 
-    // pagination
-    // limit: số object lấy về khi gọi api
-    // skip: 
-    // page=2&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
+
     const page = req.query.page * 1 || 1;
     const limit = req.query.limit * 1 || process.env.LIMIT_PRODUCT;
     const skip = (page - 1) * limit;
@@ -236,13 +233,8 @@ const getUsers = asyncHandler(async (req, res) => {
         return res.status(200).json({
             success: response ? true : false,
             counts,
-            products: response ? response : 'Cannot get product',
+            users: response ? response : 'Cannot get product',
         })
-    })
-    const response = await User.find().select('-refreshToken -password -role')
-    return res.status(200).json({
-        success: response ? true : false,
-        users: response
     })
 })
 
@@ -265,6 +257,15 @@ const updateUser = asyncHandler(async (req, res) => {
         updatedUser: response ? response : 'Something went wrong'
     })
 })
+
+const createUsers = asyncHandler(async (req, res) => {
+    const response = await User.create(users)
+    return res.status(200).json({
+        success: response ? true : false,
+        users: response ? response : 'Something went wrong'
+    })
+})
+
 
 const updateUserByAdmin = asyncHandler(async (req, res) => {
     const { uid } = req.params
@@ -337,5 +338,6 @@ module.exports = {
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
-    finalRegister
+    finalRegister,
+    createUsers
 }

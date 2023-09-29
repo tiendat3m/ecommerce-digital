@@ -35,3 +35,10 @@ export const apiGetCurrent = () => axios({
     method: 'get',
 })
 
+export const apiGetUsers = (params) => axios({
+    url: '/user/',
+    method: 'get',
+    params
+})
+
+

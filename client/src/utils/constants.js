@@ -240,3 +240,14 @@ export const adminSidebar = [
 
     },
 ]
+
+export const roles = [
+    {
+        code: 7052002,
+        value: 'Admin'
+    },
+    {
+        code: 1412002,
+        value: 'User'
+    },
+]

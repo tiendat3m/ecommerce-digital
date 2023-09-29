@@ -14,7 +14,6 @@ const AdminSidebar = () => {
         if (actived?.some(el => el === tabID)) setActived(prev => prev.filter(el => el !== tabID))
         else setActived(prev => [...prev, tabID])
     }
-    console.log(actived)
     return (
         <div className='py-4 bg-[#ffd7d7] h-full'>
             <div className='flex flex-col g justify-center gap-3 p-4 items-center '>
@@ -33,7 +32,7 @@ const AdminSidebar = () => {
                                 <span>{el.text}</span>
                             </NavLink>
                         }
-                        {el.type == 'PARENT' && <div onClick={() => handleShowTabs(el.id)} className='text-gray-600 flex flex-col justify-center'>
+                        {el.type === 'PARENT' && <div onClick={() => handleShowTabs(el.id)} className='text-gray-600 flex flex-col justify-center'>
                             <div className='flex items-center justify-between py-2 px-4 hover:bg-gray-500 hover:text-white cursor-pointer'>
                                 <div className='flex items-center gap-2'>
                                     <span>{el.icon}</span>
