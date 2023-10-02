@@ -1,24 +1,47 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { apiGetUsers } from 'apis'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { roles } from 'utils/constants'
 import moment from 'moment'
+import { InputField, Pagination } from 'components'
+import useDebounce from 'hooks/useDebounce'
+import { useSearchParams } from 'react-router-dom'
+
 const ManageUser = () => {
     const [users, setUsers] = useState(null)
+    const [queries, setQueries] = useState({
+        q: ''
+    })
+    const [params] = useSearchParams()
     const fetchUsers = async (params) => {
-        const response = await apiGetUsers(params)
-        if (response.success) setUsers(response?.users)
+        const response = await apiGetUsers({ ...params, limit: +process.env.REACT_APP_LIMIT })
+        if (response.success) setUsers(response)
     }
+    const queriesDebounce = useDebounce(queries.q, 800)
     useEffect(() => {
-        fetchUsers()
-    }, [])
+        const queries = Object.fromEntries([...params])
+        if (queriesDebounce) queries.q = queriesDebounce
+        fetchUsers(queries)
+    }, [queriesDebounce, params])
+
+
     return (
         <div className='w-full'>
             <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
                 <span>Manage Users</span>
             </h1>
             <div className='w-full p-4'>
+                <div className='flex justify-end py-4'>
+                    <InputField
+                        nameKey={'q'}
+                        value={queries.q}
+                        setValue={setQueries}
+                        style={'w500'}
+                        placeholder={'Enter username or email'}
+                        isHideLabel
+                    />
+                </div>
                 <table className='table-auto mb-6 text-left w-full'>
                     <thead className='font-semibold bg-gray-500 text-[16px] text-white'>
                         <tr className='border border-gray-500'>
@@ -33,7 +56,7 @@ const ManageUser = () => {
                         </tr>
                     </thead>
                     <tbody className=''>
-                        {users?.map((el, index) => (
+                        {users?.users?.map((el, index) => (
                             <tr key={el._id} className='text-[14px] border '>
                                 <td className='px-4 py-2'>{index + 1}</td>
                                 <td className='px-4 py-2'>{el.email}</td>
@@ -52,6 +75,9 @@ const ManageUser = () => {
                         ))}
                     </tbody>
                 </table>
+                <div className='text-right w-full flex justify-end'>
+                    <Pagination totalCount={users?.counts} />
+                </div>
             </div>
         </div>
     )

@@ -205,6 +205,14 @@ const getUsers = asyncHandler(async (req, res) => {
     // filtering
     if (queries?.name) formatedQueries.name = { $regex: queries.name, $options: 'i' }
     if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
+    if (req.query.q) {
+        delete formatedQueries.q
+        formatedQueries['$or'] = [
+            { firstname: { $regex: queries.q, $options: 'i' } },
+            { lastname: { $regex: queries.q, $options: 'i' } },
+            { email: { $regex: queries.q, $options: 'i' } }
+        ]
+    }
 
     let queryCommand = User.find(formatedQueries)
 
