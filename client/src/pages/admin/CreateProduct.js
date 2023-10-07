@@ -13,7 +13,12 @@ const CreateProduct = () => {
         const invalid = validate(payload, setInvalidFields)
         if (invalid === 0) {
             if (data.category) data.category = categories?.find(el => el._id === data.category)?.title
-            console.log({ ...data, payload })
+            const finalPayload = { ...data, payload }
+            const formData = new FormData()
+            for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ' ' + pair[1])
+            // }
         }
     }
     const [payload, setPayload] = useState({
@@ -103,14 +108,32 @@ const CreateProduct = () => {
                             fullWidth
                         />
                     </div>
-                    <div>
-                        <MarkDown
-                            name='description'
-                            changeValue={changeValue}
-                            label='Description'
-                            invalidFields={invalidFields}
-                            setInvalidFields={setInvalidFields}
+                    <MarkDown
+                        name='description'
+                        changeValue={changeValue}
+                        label='Description'
+                        invalidFields={invalidFields}
+                        setInvalidFields={setInvalidFields}
+                    />
+                    <div className='flex flex-col gap-2 my-8'>
+                        <label htmlFor="thumb">Upload Thumb</label>
+                        <input
+                            type="file"
+                            id='thumb'
+                            {...register('thumb', { required: 'Need upload file' })}
                         />
+                        {errors['thumb'] && <small className='text-main text-xs'>{errors['thumb']?.message}</small>}
+                    </div>
+                    <div className='flex flex-col gap-2 my-8'>
+                        <label htmlFor="products">Upload images of products</label>
+                        <input
+                            type="file"
+                            id='products'
+                            multiple
+                            {...register('images', { required: 'Need upload file' })}
+                        />
+                        {errors['images'] && <small className='text-main text-xs'>{errors['images']?.message}</small>}
+
                     </div>
                     <Button type='submit'>
                         Create New Product
