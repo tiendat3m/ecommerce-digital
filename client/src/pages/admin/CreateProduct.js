@@ -1,14 +1,17 @@
 import { apiCreateNewProduct } from 'apis'
 import { InputForm, Select, Button, MarkDown } from 'components'
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { useCallback } from 'react'
 import { set, useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import { validate } from 'utils/helpers'
+import { toast } from 'react-toastify'
+import { getBase64, validate } from 'utils/helpers'
+import { GrFormClose } from 'react-icons/gr'
 
 const CreateProduct = () => {
     const { categories } = useSelector(state => state.app)
-    const { handleSubmit, formState: { errors: errors }, register, watch } = useForm()
+    const { handleSubmit, formState: { errors: errors }, reset, register, watch } = useForm()
     const handleCreateProduct = (data) => {
         const invalid = validate(payload, setInvalidFields)
         if (invalid === 0) {
@@ -24,11 +27,48 @@ const CreateProduct = () => {
     const [payload, setPayload] = useState({
         description: ''
     })
+    const [hoverImage, setHoverImage] = useState(null)
     const [invalidFields, setInvalidFields] = useState([])
     const changeValue = useCallback((e) => {
         setPayload(e)
     }, [payload])
+    const [preview, setPreview] = useState({
+        thumb: null,
+        images: []
+    })
+    const handlePreviewThumb = async (file) => {
+        const base64Thumb = await getBase64(file)
+        setPreview(prev => ({ ...prev, thumb: base64Thumb }))
+    }
+    const handlePreviewImages = async (files) => {
+        console.log(files)
+        const imagesPreview = []
+        for (let file of files) {
+            if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+                toast.warning('File does not support')
+                return
+            }
+            const base64Images = await getBase64(file)
+            // console.log(base64Images)
+            imagesPreview.push({ name: file.name, path: base64Images })
 
+        }
+        setPreview(prev => ({ ...prev, images: imagesPreview }))
+    }
+    const handleRemoveImage = (name) => {
+        const files = [...watch('images')]
+        reset({
+            images: files?.filter(el => el.name !== name)
+        })
+        if (preview.images?.some(el => el.name === name)) setPreview(prev => ({ ...prev, images: prev.images?.filter(el => el.name !== name) }))
+    }
+
+    useEffect(() => {
+        handlePreviewThumb(watch('thumb')[0])
+    }, [watch('thumb')])
+    useEffect(() => {
+        handlePreviewImages(watch('images'))
+    }, [watch('images')])
     return (
         <div className='w-full'>
             <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
@@ -124,6 +164,9 @@ const CreateProduct = () => {
                         />
                         {errors['thumb'] && <small className='text-main text-xs'>{errors['thumb']?.message}</small>}
                     </div>
+                    <div>
+                        <img src={preview.thumb} alt="thumbnail" className='w-[200px]' />
+                    </div>
                     <div className='flex flex-col gap-2 my-8'>
                         <label htmlFor="products">Upload images of products</label>
                         <input
@@ -135,12 +178,33 @@ const CreateProduct = () => {
                         {errors['images'] && <small className='text-main text-xs'>{errors['images']?.message}</small>}
 
                     </div>
+                    {preview.images.length > 0 && <div className='w-full flex gap-3 flex-wrap my-4'>
+                        {preview.images?.map((el, index) => (
+                            <div
+                                onMouseEnter={() => setHoverImage(el.name)}
+                                key={index}
+                                className='w-fit relative cursor-pointer'
+                                onMouseLeave={() => setHoverImage(null)}
+                            >
+                                < img src={el.path} alt="products" className='w-[200px] object-contain ' />
+                                {hoverImage === el.name && <div className='absolute inset-0 bg-overlay-1'>
+                                    <span
+                                        onClick={() => handleRemoveImage(el.name)}
+                                        className='absolute top-[5px] right-[5px]'
+                                    >
+                                        <GrFormClose size={30} className='' />
+                                    </span>
+                                </div>}
+                            </div>
+
+                        ))}
+                    </div>}
                     <Button type='submit'>
                         Create New Product
                     </Button>
                 </form>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
