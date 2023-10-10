@@ -6,6 +6,7 @@ import Slider from 'react-slick'
 import ReactImageMagnify from 'react-image-magnify';
 import { formatMoney, renderStarFromNumber } from 'utils/helpers'
 import { productService } from 'utils/constants'
+import DOMPurify from 'dompurify';
 const settings = {
     dots: false,
     infinite: false,
@@ -103,17 +104,18 @@ const DetailProduct = () => {
                         <h2 className='text-[30px] font-semibold '>{formatMoney(product?.price)} VND</h2>
                         <span className='text-sm text-main'>{`In stock: ${product?.quantity}`}</span>
                     </div>
-                    <div className='flex items-center'>
+                    <div className='flex items-center gap-2'>
                         {renderStarFromNumber(product?.totalRatings)?.map((el, index) => (
                             <span key={index}>{el}</span>
                         ))}
-                        <span className='text-sm text-main ml-4 italic'>{`(Sold: ${product?.sold})`}</span>
+                        <span className='text-sm text-main italic'>{`(Sold: ${product?.sold})`}</span>
                     </div>
-                    <ul className='text-[14px]'>
+                    {product?.description?.length > 1 && <ul className='text-[14px]'>
                         {product?.description?.map((el) => (
                             <li key={el} className='mb-[5px] list-square ml-5 text-gray-500'>{el}</li>
                         ))}
-                    </ul>
+                    </ul>}
+                    {product?.description?.length === 1 && <div className='text-sm line-clamp-6 mb-8' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product?.description[0]) }}></div>}
                     <div className='flex flex-col gap-8'>
                         <span className='flex items-center gap-2'><span className='font-semibold'>Quantity: </span><SelectQuantity quantity={quantity} handleQuantity={handleQuantity} handleChangeQuantity={handleChangeQuantity} /></span>
                         <Button fw>

@@ -4,8 +4,8 @@ import { generateRange } from 'utils/helpers'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 const usePagination = (totalProductCount, currentPage, siblingCount = 1) => {
     const paginationArray = useMemo(() => {
-        const pageSize = process.env.REACT_APP_LIMIT || 10
-        const paginationCount = Math.ceil(totalProductCount / pageSize)
+        const pageSize = +process.env.REACT_APP_LIMIT || 10
+        const paginationCount = Math.ceil(+totalProductCount / pageSize)
         const totalPaginationItem = siblingCount + 5
         if (paginationCount < totalPaginationItem) return generateRange(1, paginationCount)
         const isShowLeft = currentPage - siblingCount > 2

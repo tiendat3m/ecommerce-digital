@@ -1,37 +1,51 @@
 import { apiCreateNewProduct } from 'apis'
-import { InputForm, Select, Button, MarkDown } from 'components'
+import { InputForm, Select, Button, MarkDown, Loading } from 'components'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useCallback } from 'react'
 import { set, useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { getBase64, validate } from 'utils/helpers'
 import { GrFormClose } from 'react-icons/gr'
+import { showModal } from 'store/app/appSlice'
 
 const CreateProduct = () => {
+    const dispatch = useDispatch()
     const { categories } = useSelector(state => state.app)
-    const { handleSubmit, formState: { errors: errors }, reset, register, watch } = useForm()
-    const handleCreateProduct = (data) => {
-        const invalid = validate(payload, setInvalidFields)
-        if (invalid === 0) {
-            if (data.category) data.category = categories?.find(el => el._id === data.category)?.title
-            const finalPayload = { ...data, payload }
-            const formData = new FormData()
-            for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
-            // for (var pair of formData.entries()) {
-            //     console.log(pair[0] + ' ' + pair[1])
-            // }
-        }
-    }
     const [payload, setPayload] = useState({
         description: ''
     })
-    const [hoverImage, setHoverImage] = useState(null)
-    const [invalidFields, setInvalidFields] = useState([])
     const changeValue = useCallback((e) => {
         setPayload(e)
     }, [payload])
+    const { handleSubmit, formState: { errors: errors }, reset, register, watch } = useForm()
+    const handleCreateProduct = async (data) => {
+        const invalid = validate(payload, setInvalidFields)
+        if (invalid === 0) {
+            if (data.category) data.category = categories?.find(el => el._id === data.category)?.title
+            const finalPayload = { ...data, ...payload }
+            const formData = new FormData()
+            for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
+            if (finalPayload.thumb) formData.append('thumb', finalPayload.thumb[0])
+            if (finalPayload.images) {
+                for (let image of finalPayload.images) formData.append('images', image)
+            }
+            dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+            const response = await apiCreateNewProduct(formData)
+            if (response.success) {
+                toast.success(response.mes)
+                reset()
+                setPayload({
+                    thumb: '',
+                    images: []
+                })
+            } else toast(response.mes)
+            dispatch(showModal({ isShowModal: false, modalChildren: null }))
+        }
+    }
+    const [hoverImage, setHoverImage] = useState(null)
+    const [invalidFields, setInvalidFields] = useState([])
     const [preview, setPreview] = useState({
         thumb: null,
         images: []
@@ -44,7 +58,7 @@ const CreateProduct = () => {
         console.log(files)
         const imagesPreview = []
         for (let file of files) {
-            if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+            if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/webp') {
                 toast.warning('File does not support')
                 return
             }
@@ -55,6 +69,7 @@ const CreateProduct = () => {
         }
         setPreview(prev => ({ ...prev, images: imagesPreview }))
     }
+
     const handleRemoveImage = (name) => {
         const files = [...watch('images')]
         reset({
@@ -62,6 +77,7 @@ const CreateProduct = () => {
         })
         if (preview.images?.some(el => el.name === name)) setPreview(prev => ({ ...prev, images: prev.images?.filter(el => el.name !== name) }))
     }
+
 
     useEffect(() => {
         handlePreviewThumb(watch('thumb')[0])
@@ -164,9 +180,9 @@ const CreateProduct = () => {
                         />
                         {errors['thumb'] && <small className='text-main text-xs'>{errors['thumb']?.message}</small>}
                     </div>
-                    <div>
+                    {preview.thumb && <div>
                         <img src={preview.thumb} alt="thumbnail" className='w-[200px]' />
-                    </div>
+                    </div>}
                     <div className='flex flex-col gap-2 my-8'>
                         <label htmlFor="products">Upload images of products</label>
                         <input

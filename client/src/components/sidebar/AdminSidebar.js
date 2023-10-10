@@ -1,7 +1,7 @@
 import React, { Fragment, memo, useState } from 'react'
 import logo from 'assets/logo.png'
 import { adminSidebar } from 'utils/constants'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import clsx from 'clsx'
 import { BsFillCaretDownFill, BsFillCaretRightFill } from 'react-icons/bs'
 
@@ -16,10 +16,10 @@ const AdminSidebar = () => {
     }
     return (
         <div className='py-4 bg-[#ffd7d7] h-full'>
-            <div className='flex flex-col g justify-center gap-3 p-4 items-center '>
+            <Link to={'/'} className='flex flex-col g justify-center gap-3 p-4 items-center '>
                 <img src={logo} alt="" className='w-[200px] object-contain' />
                 <span className='font-semibold'>Admin Workspace</span>
-            </div>
+            </Link>
             <div>
                 {adminSidebar?.map(el => (
                     <Fragment key={el.id} className='flex'>

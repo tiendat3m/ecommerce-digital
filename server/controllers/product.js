@@ -1,15 +1,19 @@
 const Product = require('../models/product')
 const asyncHandler = require('express-async-handler')
-const { PromiseProvider } = require('mongoose')
 const slugify = require('slugify')
 
 const createProduct = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
+    const { title, description, brand, price, category, color } = req.body
+    const thumb = req?.files?.thumb[0]?.path
+    const images = req?.files?.images?.map(el => el.path)
+    if (!(title && description && brand && price && category && color)) throw new Error('Missing Inputs')
+    req.body.slug = slugify(title)
+    if (thumb) req.body.thumb = thumb
+    if (images) req.body.images = images
     const newProduct = await Product.create(req.body)
     return res.status(200).json({
         success: newProduct ? true : false,
-        createdProduct: newProduct ? newProduct : 'Cannot create new product'
+        mes: newProduct ? 'Created Product Successfully' : 'Cannot create new product',
     })
 })
 
