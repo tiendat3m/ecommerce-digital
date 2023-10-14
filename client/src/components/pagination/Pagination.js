@@ -26,7 +26,7 @@ const Pagination = ({ totalCount }) => {
             <div className='flex items-center gap-4 text-gray-600 text-[14px] font-semibold'>
                 {pagination?.map(el => (
                     <PagiItem
-                        key={el}
+                        key={el?._id}
                     >
                         {el}
                     </PagiItem>
