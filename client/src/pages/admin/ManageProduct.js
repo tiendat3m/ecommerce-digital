@@ -1,4 +1,4 @@
-import { apiGetProducts } from 'apis'
+import { apiDeleteProduct, apiGetProducts } from 'apis'
 import { InputForm, Pagination } from 'components'
 import useDebounce from 'hooks/useDebounce'
 import moment from 'moment'
@@ -6,8 +6,13 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { formatMoney } from 'utils/helpers'
+import UpdateProduct from './UpdateProduct'
+import path from 'utils/path'
+import { useCallback } from 'react'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const ManageProduct = () => {
     const [products, setProducts] = useState(null)
@@ -15,10 +20,15 @@ const ManageProduct = () => {
     const location = useLocation()
     const [params] = useSearchParams()
     const [counts, setCounts] = useState(0)
+    const [editProduct, setEditProduct] = useState(null)
+    const [update, setUpdate] = useState(false)
     const { register, formState: { errors }, handleSubmit, watch, reset } = useForm()
-    const handleSearchProducts = (data) => {
-        console.log(data)
-    }
+    // const handleSearchProducts = (data) => {
+    //     console.log(data)
+    // }
+    const render = useCallback(() => {
+        setUpdate(!update)
+    }, [update])
     const fetchProducts = async (params) => {
         const response = await apiGetProducts({ ...params, limit: process.env.REACT_APP_LIMIT })
         if (response.success) {
@@ -26,6 +36,8 @@ const ManageProduct = () => {
             setCounts(response.counts)
         }
     }
+
+
     const queriesDebounce = useDebounce(watch('q'), 800)
     useEffect(() => {
         if (queriesDebounce) {
@@ -42,9 +54,30 @@ const ManageProduct = () => {
     useEffect(() => {
         const searchParams = Object.fromEntries([...params])
         fetchProducts(searchParams)
-    }, [params])
+    }, [params, update])
+
+    const handleDeleteProduct = (pid) => {
+        Swal.fire({
+            title: 'Are you sure',
+            text: 'Are you sure to delete this product ',
+            icon: 'warning',
+            showCancelButton: true
+        }).then(async (rs) => {
+            if (rs.isConfirmed) {
+                const response = await apiDeleteProduct(pid)
+                console.log(response)
+                if (response.success) {
+                    toast.success(response.mes)
+                } else toast.error(response.mes)
+                render()
+            }
+        })
+    }
     return (
         <div className='w-full flex flex-col gap-4 relative'>
+            {editProduct && <div className='absolute inset-0 bg-gray-100 min-h-screen z-50'>
+                <UpdateProduct editProduct={editProduct} render={render} setEditProduct={setEditProduct} />
+            </div>}
             <div className='h-[69px] w-full'></div>
             <h1 className='h-[75px] bg-gray-100  w-full flex justify-between items-center text-3xl font-bold p-4 border-b fixed top-0'>
                 <span>Manage Products</span>
@@ -53,7 +86,7 @@ const ManageProduct = () => {
                 <form
                     className='w-[40%] px-4'
                     action=""
-                    onSubmit={handleSubmit(handleSearchProducts)}
+                // onSubmit={handleSubmit(handleSearchProducts)}
                 >
                     <InputForm
                         id={'q'}
@@ -78,6 +111,7 @@ const ManageProduct = () => {
                         <th className='px-4 py-2 text-center'>Color</th>
                         <th className='px-4 py-2 text-center'>Ratings</th>
                         <th className='px-4 py-2 text-center'>Created At</th>
+                        <th className='px-4 py-2 text-center'>Actions</th>
                     </tr>
                 </thead>
                 <tbody className='text-[13px]'>
@@ -96,6 +130,18 @@ const ManageProduct = () => {
                             <td className='px-4 py-2 text-center'>{el.color}</td>
                             <td className='px-4 py-2 text-center'>{el.totalRatings}</td>
                             <td className='px-4 py-2 text-center '>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
+                            <td className='px-4 py-2 text-center'>
+                                <span
+                                    className='text-blue-500 hover:underline mr-2 cursor-pointer'
+                                    onClick={() => setEditProduct(el)}
+                                >
+                                    Edit
+                                </span>
+                                <span
+                                    className='text-blue-500 hover:underline cursor-pointer'
+                                    onClick={() => handleDeleteProduct(el?._id)}
+                                >Delete</span>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

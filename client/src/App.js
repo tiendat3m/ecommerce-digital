@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword } from './pages/public';
-import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct } from './pages/admin';
+import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct, UpdateProduct } from './pages/admin';
 import { MemberLayout, Personal } from './pages/member';
 import { Modal } from './components';
 import path from './utils/path';
@@ -35,6 +35,7 @@ function App() {
           <Route path={path.MANAGER_PRODUCT} element={<ManageProduct />} />
           <Route path={path.MANAGER_ORDER} element={<ManageOrder />} />
           <Route path={path.CREATE_PRODUCT} element={<CreateProduct />} />
+          {/* <Route path={path.UPDATE_PRODUCT} element={<UpdateProduct />} /> */}
         </Route>
         <Route path={path.MEMBER} element={<MemberLayout />}>
           <Route path={path.PERSONAL} element={<Personal />} />
