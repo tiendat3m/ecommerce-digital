@@ -11,6 +11,8 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
+import { MdEditNote, MdDeleteOutline } from 'react-icons/md'
+import { TiArrowBack } from 'react-icons/ti'
 
 const ManageUser = () => {
     const { handleSubmit, register, formState: { errors } } = useForm({
@@ -189,14 +191,14 @@ const ManageUser = () => {
                                             : <span>{el?.isBlocked ? 'Blocked' : 'Active'}</span>}
                                     </td>
                                     <td className='px-4 py-2'>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
-                                    <td className={clsx('px-4 py-2')}>
-                                        <span className='flex'>
+                                    <td className='px-4 py-2 '>
+                                        <div className='flex items-center gap-1'>
                                             {editEl?._id === el?._id
-                                                ? <span onClick={() => setEditEl(null)} className='px-2 text-main hover:underline cursor-pointer'>Back </span>
-                                                : <span onClick={() => setEditEl(el)} className='px-2 text-main hover:underline cursor-pointer'>Edit</span>
+                                                ? <span onClick={() => setEditEl(null)} className='text-blue-500 hover:text-main cursor-pointer'><TiArrowBack size={20} /> </span>
+                                                : <span onClick={() => setEditEl(el)} className='text-blue-500 hover:text-main cursor-pointer'><MdEditNote size={20} /></span>
                                             }
-                                            <span onClick={() => handleDelete(el._id)} className='px-2 text-main hover:underline cursor-pointer'>Delete</span>
-                                        </span>
+                                            <span onClick={() => handleDelete(el._id)} className='text-blue-500 hover:text-main cursor-pointer'><MdDeleteOutline size={20} /></span>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

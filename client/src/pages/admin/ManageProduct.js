@@ -1,5 +1,5 @@
 import { apiDeleteProduct, apiGetProducts } from 'apis'
-import { InputForm, Pagination } from 'components'
+import { CustomizeVariant, InputForm, Pagination } from 'components'
 import useDebounce from 'hooks/useDebounce'
 import moment from 'moment'
 import React from 'react'
@@ -13,6 +13,8 @@ import path from 'utils/path'
 import { useCallback } from 'react'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { MdEditNote, MdDeleteOutline, MdOutlineDashboardCustomize } from 'react-icons/md'
+
 
 const ManageProduct = () => {
     const [products, setProducts] = useState(null)
@@ -21,6 +23,7 @@ const ManageProduct = () => {
     const [params] = useSearchParams()
     const [counts, setCounts] = useState(0)
     const [editProduct, setEditProduct] = useState(null)
+    const [customizeVariant, setCustomizeVariant] = useState(null)
     const [update, setUpdate] = useState(false)
     const { register, formState: { errors }, handleSubmit, watch, reset } = useForm()
     // const handleSearchProducts = (data) => {
@@ -78,6 +81,9 @@ const ManageProduct = () => {
             {editProduct && <div className='absolute inset-0 bg-gray-100 min-h-screen z-50'>
                 <UpdateProduct editProduct={editProduct} render={render} setEditProduct={setEditProduct} />
             </div>}
+            {customizeVariant && <div className='absolute inset-0 bg-gray-100 min-h-screen z-30'>
+                <CustomizeVariant customizeVariant={customizeVariant} render={render} setCustomizeVariant={setCustomizeVariant} />
+            </div>}
             <div className='h-[69px] w-full'></div>
             <h1 className='h-[75px] bg-gray-100  w-full flex justify-between items-center text-3xl font-bold p-4 border-b fixed top-0'>
                 <span>Manage Products</span>
@@ -110,6 +116,7 @@ const ManageProduct = () => {
                         <th className='px-4 py-2 text-center'>Sold</th>
                         <th className='px-4 py-2 text-center'>Color</th>
                         <th className='px-4 py-2 text-center'>Ratings</th>
+                        <th className='px-4 py-2 text-center'>Variant Count</th>
                         <th className='px-4 py-2 text-center'>Created At</th>
                         <th className='px-4 py-2 text-center'>Actions</th>
                     </tr>
@@ -129,18 +136,29 @@ const ManageProduct = () => {
                             <td className='px-4 py-2 text-center'>{el.sold}</td>
                             <td className='px-4 py-2 text-center'>{el.color}</td>
                             <td className='px-4 py-2 text-center'>{el.totalRatings}</td>
+                            <td className='px-4 py-2 text-center'>{el.variants.length || 0}</td>
                             <td className='px-4 py-2 text-center '>{moment(el.createdAt).format('DD/MM/YYYY')}</td>
                             <td className='px-4 py-2 text-center'>
-                                <span
-                                    className='text-blue-500 hover:underline mr-2 cursor-pointer'
-                                    onClick={() => setEditProduct(el)}
-                                >
-                                    Edit
-                                </span>
-                                <span
-                                    className='text-blue-500 hover:underline cursor-pointer'
-                                    onClick={() => handleDeleteProduct(el?._id)}
-                                >Delete</span>
+                                <div className='flex items-center gap-1 justify-center'>
+                                    <span
+                                        className='text-blue-500 hover:text-main cursor-pointer'
+                                        onClick={() => setEditProduct(el)}
+                                    >
+                                        <MdEditNote size={20} />
+                                    </span>
+                                    <span
+                                        className='text-blue-500 hover:text-main cursor-pointer'
+                                        onClick={() => handleDeleteProduct(el?._id)}
+                                    >
+                                        <MdDeleteOutline size={20} />
+                                    </span>
+                                    <span
+                                        className='text-blue-500 hover:text-main cursor-pointer'
+                                        onClick={() => setCustomizeVariant(el)}
+                                    >
+                                        <MdOutlineDashboardCustomize size={20} />
+                                    </span>
+                                </div>
                             </td>
                         </tr>
                     ))}

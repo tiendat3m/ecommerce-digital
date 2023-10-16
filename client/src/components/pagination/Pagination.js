@@ -24,9 +24,9 @@ const Pagination = ({ totalCount }) => {
             {!+params.get('page') ? <span className='text-sm italic'>{`Show products 1 - ${Math.min(+process.env.REACT_APP_LIMIT, totalCount) || 10} of ${totalCount}`}</span> : ''}
             {+params.get('page') ? <span className='text-sm italic'>{`Show products ${range()} of ${totalCount}`}</span> : ''}
             <div className='flex items-center gap-4 text-gray-600 text-[14px] font-semibold'>
-                {pagination?.map(el => (
+                {pagination?.map((el, idx) => (
                     <PagiItem
-                        key={el?._id}
+                        key={idx}
                     >
                         {el}
                     </PagiItem>

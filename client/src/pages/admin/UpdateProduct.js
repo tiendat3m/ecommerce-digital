@@ -24,10 +24,6 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
     const changeValue = useCallback((e) => {
         setPayload(e)
     }, [payload])
-    const handlePreviewThumb = async (file) => {
-        const base64Thumb = await getBase64(file)
-        setPreview(prev => ({ ...prev, thumb: base64Thumb }))
-    }
     useEffect(() => {
         reset({
             title: editProduct?.title || '',
@@ -44,6 +40,22 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
         })
     }, [editProduct])
 
+    useEffect(() => {
+        if (watch('thumb') instanceof FileList && watch('thumb').length > 0) {
+            handlePreviewThumb(watch('thumb')[0])
+        }
+    }, [watch('thumb')])
+    useEffect(() => {
+        if (watch('images') instanceof FileList && watch('images').length > 0) {
+            handlePreviewImages(watch('images'))
+        }
+    }, [watch('images')])
+
+    const handlePreviewThumb = async (file) => {
+        const base64Thumb = await getBase64(file)
+        setPreview(prev => ({ ...prev, thumb: base64Thumb }))
+    }
+
     const handlePreviewImages = async (files) => {
         const imagesPreview = []
         for (let file of files) {
@@ -59,30 +71,19 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
         setPreview(prev => ({ ...prev, images: imagesPreview }))
     }
 
-    useEffect(() => {
-        if (watch('thumb') instanceof FileList && watch('thumb').length > 0) {
-            handlePreviewThumb(watch('thumb')[0])
-        }
-    }, [watch('thumb')])
-    useEffect(() => {
-        if (watch('images') instanceof FileList && watch('images').length > 0) {
-            handlePreviewImages(watch('images'))
-        }
-    }, [watch('images')])
-
     const handleUpdateProduct = async (data) => {
         const invalid = validate(payload, setInvalidFields)
         if (invalid === 0) {
             if (data.category) data.category = categories?.find(el => el.title === data.category)?.title
             const finalPayload = { ...data, ...payload }
-            finalPayload.thumb = data?.thumb?.length === 0 ? preview.thumb : data.thumb[0]
             const formData = new FormData()
+            finalPayload.thumb = data?.thumb?.length === 0 ? preview.thumb : data.thumb[0]
             for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1])
             finalPayload.images = data?.images?.length === 0 ? preview.images : data.images
             for (let image of finalPayload.images) formData.append('images', image)
-            // dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+            dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
             const response = await apiUpdateProduct(formData, editProduct?._id)
-            // dispatch(showModal({ isShowModal: false, modalChildren: null }))
+            dispatch(showModal({ isShowModal: false, modalChildren: null }))
             if (response.success) {
                 toast.success(response.mes)
                 render()

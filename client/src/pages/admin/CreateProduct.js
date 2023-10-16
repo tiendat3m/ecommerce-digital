@@ -31,15 +31,15 @@ const CreateProduct = () => {
             }
             dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
             const response = await apiCreateNewProduct(formData)
+            dispatch(showModal({ isShowModal: false, modalChildren: null }))
             if (response.success) {
                 toast.success(response.mes)
                 reset()
-                setPayload({
+                setPreview({
                     thumb: '',
                     images: []
                 })
             } else toast(response.mes)
-            dispatch(showModal({ isShowModal: false, modalChildren: null }))
         }
     }
     const [hoverImage, setHoverImage] = useState(null)
