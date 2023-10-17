@@ -78,15 +78,15 @@ const ManageProduct = () => {
     }
     return (
         <div className='w-full flex flex-col gap-4 relative'>
-            {editProduct && <div className='absolute inset-0 bg-gray-100 min-h-screen z-50'>
+            {editProduct && <div className='absolute inset-0 bg-gray-100 min-h-screen z-30'>
                 <UpdateProduct editProduct={editProduct} render={render} setEditProduct={setEditProduct} />
             </div>}
             {customizeVariant && <div className='absolute inset-0 bg-gray-100 min-h-screen z-30'>
                 <CustomizeVariant customizeVariant={customizeVariant} render={render} setCustomizeVariant={setCustomizeVariant} />
             </div>}
             <div className='h-[69px] w-full'></div>
-            <h1 className='h-[75px] bg-gray-100  w-full flex justify-between items-center text-3xl font-bold p-4 border-b fixed top-0'>
-                <span>Manage Products</span>
+            <h1 className='h-[75px] bg-gray-100  w-full items-center text-3xl font-bold p-4 border-b fixed top-0'>
+                Manage Products
             </h1>
             <div className='flex w-full justify-end items-center'>
                 <form
@@ -116,7 +116,7 @@ const ManageProduct = () => {
                         <th className='px-4 py-2 text-center'>Sold</th>
                         <th className='px-4 py-2 text-center'>Color</th>
                         <th className='px-4 py-2 text-center'>Ratings</th>
-                        <th className='px-4 py-2 text-center'>Variant Count</th>
+                        <th className='px-4 py-2 text-center'>Variant</th>
                         <th className='px-4 py-2 text-center'>Created At</th>
                         <th className='px-4 py-2 text-center'>Actions</th>
                     </tr>

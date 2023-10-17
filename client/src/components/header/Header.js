@@ -1,13 +1,26 @@
-import React, { Fragment, memo } from 'react'
+import React, { Fragment, memo, useEffect, useState } from 'react'
 import logo from 'assets/logo.png'
 import icons from 'utils/icons'
 import { Link } from 'react-router-dom'
 import path from 'utils/path'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from 'store/user/userSlice'
 
 const Header = () => {
   const { RiPhoneFill, MdEmail, BsHandbagFill, FaUserCircle } = icons
+  const [isShowOption, setIsShowOption] = useState(false);
+  const dispatch = useDispatch()
   const { current } = useSelector(state => state.user)
+  useEffect(() => {
+    const handleClickOutOptions = (e) => {
+      const profile = document.getElementById('profile')
+      if (!profile.contains(e.target)) setIsShowOption(false)
+    }
+    document.addEventListener('click', handleClickOutOptions)
+    return () => {
+      document.removeEventListener('click', handleClickOutOptions)
+    }
+  }, [])
   return (
     <div className='w-main h-[110px] py-[35px] flex justify-between'>
       <Link to={`/${path.HOME}`}>
@@ -29,17 +42,25 @@ const Header = () => {
           <span className='text-[12px]'>Online Support 24/7</span>
         </div>
         {current && <Fragment>
-          <div className='cursor-pointer flex items-center px-6 border-r gap-2 justify-center'>
+          <div className='cursor-pointer flex items-center px-6 border-r gap-2 justify-center' >
             <BsHandbagFill color='red' size={20} />
             <span>0 item(s)</span>
           </div>
-          <Link
-            to={+current?.role === 7052002 ? `/${path.ADMIN}/${path.DASHBOARD}` : `/${path.MEMBER}/${path.PERSONAL}`}
-            className='cursor-pointer flex items-center px-6 justify-center gap-2'
+          <div
+            className='cursor-pointer flex items-center px-6 justify-center gap-2 relative'
+            onClick={() => setIsShowOption(prev => !prev)}
+            id='profile'
           >
             <FaUserCircle size={24} color='red' />
             <span>Profile</span>
-          </Link>
+            {isShowOption && <div onClick={(e) => e.stopPropagation()} className='absolute min-w-[150px] top-full left-[20%] bg-gray-100 py-2 border flex flex-col rounded-sm'>
+              <Link to={`${path.MEMBER}/${path.PERSONAL}`} className='hover:bg-white p-2 w-full'>My Account</Link>
+              {+current.role === 7052002 && <Link className='p-2 hover:bg-white w-full' to={`${path.ADMIN}/${path.DASHBOARD}`}>
+                Admin Workspace
+              </Link>}
+              <span onClick={() => dispatch(logout())} className='p-2 hover:bg-white w-full'>Logout</span>
+            </div>}
+          </div>
         </Fragment>}
       </div>
     </div>

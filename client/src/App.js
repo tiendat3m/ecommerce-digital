@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword } from './pages/public';
-import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct, UpdateProduct } from './pages/admin';
-import { MemberLayout, Personal } from './pages/member';
+import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct } from './pages/admin';
+import { MemberLayout, MyCart, Personal, Wishlist, History } from './pages/member';
 import { Modal } from './components';
 import path from './utils/path';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,6 +39,9 @@ function App() {
         </Route>
         <Route path={path.MEMBER} element={<MemberLayout />}>
           <Route path={path.PERSONAL} element={<Personal />} />
+          <Route path={path.MY_CART} element={<MyCart />} />
+          <Route path={path.HISTORY} element={<History />} />
+          <Route path={path.WISHLIST} element={<Wishlist />} />
         </Route>
         <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />

@@ -241,6 +241,52 @@ export const adminSidebar = [
     },
 ]
 
+export const memberSidebar = [
+    {
+        id: 1,
+        type: 'SINGLE',
+        text: 'Personal',
+        path: `/${path.MEMBER}/${path.PERSONAL}`,
+        icon: <AiOutlineDashboard size={20} />
+    },
+    {
+        id: 2,
+        type: 'SINGLE',
+        text: 'My Cart',
+        path: `/${path.MEMBER}/${path.MY_CART}`,
+        icon: <MdOutlineGroup size={20} />
+
+    },
+    {
+        id: 3,
+        type: 'SINGLE',
+        text: 'Buy History',
+        path: `/${path.MEMBER}/${path.HISTORY}`,
+        icon: <RiBillLine size={20} />
+
+    },
+    {
+        id: 4,
+        type: 'SINGLE',
+        text: 'Wishlist',
+        path: `/${path.MEMBER}/${path.WISHLIST}`,
+        icon: <RiProductHuntLine size={20} />,
+        // submenu: [
+        //     {
+        //         text: 'Create Product',
+        //         path: `/${path.MEMBER}/${path.CREATE_PRODUCT}`
+        //     },
+        //     {
+        //         text: 'Manage Product',
+        //         path: `/${path.MEMBER}/${path.MANAGER_PRODUCT}`
+        //     },
+        // ],
+
+
+    },
+
+]
+
 export const roles = [
     {
         code: 7052002,

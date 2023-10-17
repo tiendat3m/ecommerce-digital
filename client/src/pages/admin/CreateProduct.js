@@ -85,7 +85,7 @@ const CreateProduct = () => {
     return (
         <div className='w-full'>
             <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
-                <span>Create New Product</span>
+                Create New Product
             </h1>
             <div className='p-4'>
                 <form onSubmit={handleSubmit(handleCreateProduct)}>
