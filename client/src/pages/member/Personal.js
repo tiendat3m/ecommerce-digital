@@ -2,10 +2,14 @@ import { Button, InputForm, MemberSidebar } from 'components'
 import moment from 'moment'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
+import defaultAvatar from 'assets/avatarDefault.png'
+import { apiUpdateCurrent } from 'apis'
+import { toast } from 'react-toastify'
+import { getCurrent } from 'store/user/asyncActions'
 const Personal = () => {
     const { register, formState: { errors, isDirty }, handleSubmit, watch, reset } = useForm()
+    const dispatch = useDispatch()
     const { current } = useSelector(state => state.user)
     useEffect(() => {
         reset({
@@ -16,8 +20,19 @@ const Personal = () => {
             avatar: current?.avatar || ''
         })
     }, [current])
-    const handleSaveProfile = (data) => {
-        console.log(data)
+    const handleSaveProfile = async (data) => {
+        const formData = new FormData()
+        if (data.avatar.length > 0) {
+            formData.append('avatar', data.avatar[0])
+            delete data.avatar
+        }
+        for (let i of Object.entries(data)) formData.append(i[0], i[1])
+        const response = await apiUpdateCurrent(formData)
+        if (response.success) {
+            dispatch(getCurrent())
+            toast.success(response.mes)
+        } else toast.error(response.mes)
+
     }
 
     return (
@@ -26,30 +41,28 @@ const Personal = () => {
                 My Profile
             </header>
             <form onSubmit={handleSubmit(handleSaveProfile)} className='w-3/5 mx-auto py-8 flex flex-col gap-4'>
-                <div className='flex w-full gap-4'>
-                    <InputForm
-                        label={'First Name'}
-                        register={register}
-                        errors={errors}
-                        id='firstname'
-                        validate={{
-                            required: 'Require fill'
-                        }}
-                        fullWidth
-                        style='flex-auto'
-                    />
-                    <InputForm
-                        label={'Last Name'}
-                        register={register}
-                        errors={errors}
-                        id='lastname'
-                        validate={{
-                            required: 'Require fill'
-                        }}
-                        fullWidth
-                        style='flex-auto'
-                    />
-                </div>
+                <InputForm
+                    label={'First Name'}
+                    register={register}
+                    errors={errors}
+                    id='firstname'
+                    validate={{
+                        required: 'Require fill'
+                    }}
+                    fullWidth
+                    style='flex-auto'
+                />
+                <InputForm
+                    label={'Last Name'}
+                    register={register}
+                    errors={errors}
+                    id='lastname'
+                    validate={{
+                        required: 'Require fill'
+                    }}
+                    fullWidth
+                    style='flex-auto'
+                />
                 <InputForm
                     label={'Email'}
                     register={register}
@@ -89,6 +102,13 @@ const Personal = () => {
                 <div className='flex items-center gap-2'>
                     <span className='font-medium'>Created At: </span>
                     <span>{moment(current?.createdAt).format('DD/MM/YYYY')}</span>
+                </div>
+                <div className='flex flex-col gap-2'>
+                    <span className='font-medium'>Avatar: </span>
+                    <label htmlFor="file">
+                        <img src={current.avatar || defaultAvatar} alt="" className='h-20 w-20 object-contain cursor-pointer rounded-full' />
+                        <input type="file" id='file' {...register('avatar')} className='hidden' />
+                    </label>
                 </div>
                 {isDirty && <div className='flex w-full justify-end'>
                     <Button type='submit'>

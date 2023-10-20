@@ -11,7 +11,6 @@ const activeStyle = 'px-4 py-2 flex items-center gap-2 text-gray-600 bg-gray-500
 const notActiveStyle = 'px-4 py-2 flex items-center gap-2 text-gray-600 hover:bg-gray-500 hover:text-white '
 const MemberSidebar = () => {
     const { current } = useSelector(state => state.user)
-    console.log(current)
     const [actived, setActived] = useState([])
     const handleShowTabs = (tabID) => {
         if (actived?.some(el => el === tabID)) setActived(prev => prev.filter(el => el !== tabID))
@@ -20,7 +19,7 @@ const MemberSidebar = () => {
     return (
         <div className='py-4 bg-[#ffd7d7] h-full'>
             <Link to={'/'} className='flex flex-col justify-center gap-3 p-4 items-center '>
-                <img src={current?.avatar || avatar} alt="" className='h-16 w-16 object-contain' />
+                <img src={current?.avatar || avatar} alt="" className='h-16 w-16 object-contain rounded-full' />
                 <span className='font-semibold'>{`${current.firstname} ${current.lastname}`}</span>
             </Link>
             <div>
