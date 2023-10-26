@@ -4,7 +4,7 @@ const { AiFillStar, AiOutlineStar } = icons
 
 export const createSlug = str => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(' ').join('-')
 export const formatMoney = number => Number(number?.toFixed(1)).toLocaleString()
-export const formatPrice = number => Math.round(number / 1000) * 100
+export const formatPrice = number => Math.round(number / 1000) * 1000
 export const renderStarFromNumber = (number, size) => {
     if (!Number(number)) return
 

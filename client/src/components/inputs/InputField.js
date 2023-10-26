@@ -9,12 +9,12 @@ const InputField = ({ value, setValue, nameKey, type, invalidFields, setInvalidF
                     htmlFor={nameKey}
                     className='absolute top-[-6px] left-[12px] text-[10px] bg-white px-1 block animate-slide-top-sm'
                 >
-                    {nameKey?.slice(0, 1).toUpperCase() + nameKey?.slice(1)}
+                    {nameKey?.slice(0, 1)?.toUpperCase() + nameKey?.slice(1)}
                 </label>}
             <input
                 type={type || 'text'}
                 className={clsx('px-4 py-2 rounded-sm border outline-none my-2 w-full placeholder:text-sm placeholder:italic', style)}
-                placeholder={placeholder || nameKey?.slice(0, 1).toUpperCase() + nameKey?.slice(1)}
+                placeholder={placeholder || nameKey?.slice(0, 1)?.toUpperCase() + nameKey?.slice(1)}
                 value={value}
                 onChange={e => setValue(prev => ({ ...prev, [nameKey]: e.target.value }))}
                 onFocus={() => setInvalidFields && setInvalidFields([])}

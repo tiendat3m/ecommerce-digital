@@ -178,7 +178,7 @@ const addVariant = asyncHandler(async (req, res) => {
     const thumb = req?.files?.thumb[0]?.path
     const images = req?.files?.images?.map(el => el.path)
     if (!(title && price && color)) throw new Error('Missing Inputs')
-    const response = await Product.findByIdAndUpdate(pid, { $push: { variants: { color, price, title, thumb, images, sku: makeSKU().toUpperCase() } } }, { new: true })
+    const response = await Product.findByIdAndUpdate(pid, { $push: { variants: { color, price, title, thumb, images, sku: makeSKU()?.toUpperCase() } } }, { new: true })
     return res.status(200).json({
         success: response ? true : false,
         mes: response ? 'Add variant successfully' : 'Cannot upload images product'

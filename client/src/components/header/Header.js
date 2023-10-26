@@ -1,5 +1,6 @@
 import React, { Fragment, memo, useEffect, useState } from 'react'
 import logo from 'assets/logo.png'
+import avatarDefault from 'assets/avatarDefault.png'
 import icons from 'utils/icons'
 import { Link } from 'react-router-dom'
 import path from 'utils/path'
@@ -51,7 +52,7 @@ const Header = () => {
             onClick={() => setIsShowOption(prev => !prev)}
             id='profile'
           >
-            <FaUserCircle size={24} color='red' />
+            <img src={current.avatar || avatarDefault} alt="" className='w-7 h-7 rounded-full object-contain' />
             <span>Profile</span>
             {isShowOption && <div onClick={(e) => e.stopPropagation()} className='absolute min-w-[150px] top-full left-[20%] bg-gray-100 py-2 border flex flex-col rounded-sm'>
               <Link to={`${path.MEMBER}/${path.PERSONAL}`} className='hover:bg-white p-2 w-full'>My Account</Link>

@@ -15,14 +15,17 @@ const settings = {
     slidesToShow: 3,
     slidesToScroll: 1
 };
-const DetailProduct = () => {
+const DetailProduct = ({ isQuickView, data }) => {
     const [currentImage, setCurrentImage] = useState(null)
     const [relatedProducts, setRelatedProducts] = useState(null)
     const [product, setProduct] = useState(null)
     const [update, setUpdate] = useState(false)
     const [quantity, setQuantity] = useState(1)
     const [variant, setVariant] = useState(null)
-    const { pid, category } = useParams()
+    const params = useParams()
+    const [pid, setPid] = useState(null);
+    const [category, setCategory] = useState(null);
+
     const [currentProduct, setCurrentProduct] = useState({
         title: '',
         thumb: '',
@@ -41,6 +44,15 @@ const DetailProduct = () => {
         const response = await apiGetProducts({ category })
         if (response.success) setRelatedProducts(response?.products)
     }
+    useEffect(() => {
+        if (data) {
+            setPid(data.pid)
+            setCategory(data.category)
+        } else if (params && params.pid) {
+            setPid(params.pid)
+            setCategory(params.category)
+        }
+    }, [data, params])
     useEffect(() => {
         if (pid) {
             fetchProductData()
@@ -87,31 +99,33 @@ const DetailProduct = () => {
     }
 
     return (
-        <div className='w-full'>
-            <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
+        <div className={clsx('w-ful')}>
+            {!isQuickView && <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main flex gap-2 flex-col'>
                     <span className='font-semibold'>{currentProduct?.title || product?.title}</span>
                     <Breadcrumb title={currentProduct?.title || product?.title} category={product?.category} />
                 </div>
-            </div>
-            <div className='w-main flex m-auto mt-4 gap-8'>
-                <div className='flex flex-col gap-4 w-2/5'>
-                    <div className='w-[485px] border'>
-                        <ReactImageMagnify {...{
-                            smallImage: {
-                                isFluidWidth: true,
-                                src: currentProduct?.thumb || currentImage,
-                            },
-                            largeImage: {
-                                width: 800,
-                                height: 800,
-                                src: currentProduct?.thumb || currentImage,
+            </div>}
+            <div onClick={e => e.stopPropagation()} className={clsx('bg-white flex m-auto mt-4 gap-8', isQuickView ? 'max-w-[900px] max-h-[80vh] overflow-y-auto gap-20 p-8' : 'w-main')}>
+                <div className={clsx('flex flex-col gap-4 w-2/5', isQuickView && 'w-1/2')}>
+                    <div className={clsx('w-[458px] h-[458px] border')}>
+                        < ReactImageMagnify {
+                            ...{
+                                smallImage: {
+                                    isFluidWidth: true,
+                                    src: currentProduct?.thumb || currentImage,
+                                },
+                                largeImage: {
+                                    width: 800,
+                                    height: 800,
+                                    src: currentProduct?.thumb || currentImage,
+                                }
                             }
-                        }} />
+                        } />
                     </div>
-                    <div className='w-full'>
+                    <div className='w-[458px]'>
                         <Slider className='images-slider' {...settings}>
-                            {currentProduct?.images?.length === 0 && currentProduct?.images?.map(el => (
+                            {currentProduct?.images?.length === 0 && product?.images?.map(el => (
                                 <div onClick={(e) => handelClickImage(e, el)} key={el}>
                                     <img src={el} alt="" className='w-[143px] h-[143px] p-2 object-contain border' />
                                 </div>
@@ -124,7 +138,7 @@ const DetailProduct = () => {
                         </Slider>
                     </div>
                 </div>
-                <div className='w-2/5 flex flex-col gap-5'>
+                <div className={clsx('w-2/5 flex flex-col gap-5', isQuickView && 'w-1/2')}>
                     <div className='flex items-center justify-between'>
                         <h2 className='text-[30px] font-semibold '>{formatMoney(formatPrice(currentProduct?.price || product?.price))} VND</h2>
                         <span className='text-sm text-main'>{`In stock: ${product?.quantity}`}</span>
@@ -144,18 +158,18 @@ const DetailProduct = () => {
                     <div className='my-4 flex gap-4'>
                         <span className='font-semibold'>Color</span>
                         <div className='flex flex-wrap gap-4 w-full items-center'>
-                            <div onClick={() => setVariant(product?.variants)} className={clsx('flex items-center gap-2 p-2 border cursor-pointer', !variant && 'border-red-500')}>
+                            <div onClick={() => setVariant(null)} className={clsx('flex items-center gap-2 p-2 border cursor-pointer', !variant && 'border-red-500')}>
                                 <img src={product?.thumb} alt="thumb" className='rounded-md w-12 h-12 object-cover' />
                                 <span className='flex flex-col gap-1'>
-                                    <span>{product?.color.toUpperCase()}</span>
-                                    <span className='text-sm'>{formatMoney(product?.price)}</span>
+                                    <span>{product?.color?.toUpperCase()}</span>
+                                    <span className='text-sm'>{formatMoney(formatPrice(product?.price))}</span>
                                 </span>
                             </div>
                             {product?.variants?.map(el => (
                                 <div onClick={() => setVariant(el?.sku)} key={el?._id} className={clsx('flex items-center gap-2 p-2 border cursor-pointer', variant === el?.sku && 'border-red-500')}>
                                     <img src={el?.thumb} alt="thumb" className='rounded-md w-12 h-12 object-cover' />
                                     <span className='flex flex-col'>
-                                        <span>{el?.color.toUpperCase()}</span>
+                                        <span>{el?.color?.toUpperCase()}</span>
                                         <span className='text-sm'>{formatMoney(el?.price)}</span>
                                     </span>
                                 </div>
@@ -169,22 +183,26 @@ const DetailProduct = () => {
                         </Button>
                     </div>
                 </div>
-                <div className='w-1/5'>
+                {!isQuickView && <div className='w-1/5'>
                     {productService?.map((el) => (
                         <ProductService key={el.id} title={el.title} sub={el.sub} icon={el.icon} />
                     ))}
+                </div>}
+            </div>
+            {
+                !isQuickView && <div className='w-main mt-8 m-auto'>
+                    <ProductInfo totalRatings={product?.totalRatings} ratings={product?.ratings} productName={product?.title} pid={product?._id} rerender={rerender} />
                 </div>
-            </div>
-            <div className='w-main mt-8 m-auto'>
-                <ProductInfo totalRatings={product?.totalRatings} ratings={product?.ratings} productName={product?.title} pid={product?._id} rerender={rerender} />
-            </div>
+            }
 
-            <div className='w-main mt-8 m-auto'>
-                <h3 className='text-[20px] py-[15px] border-b-2 border-main font-semibold mb-4'>OTHER CUSTOMERS ALSO BUY:</h3>
-                <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true} slidesToShow={4} /></div>
-            </div>
-            <div className='h-[400px]'></div>
-        </div>
+            {
+                !isQuickView && <div className='w-main mt-8 m-auto'>
+                    <h3 className='text-[20px] py-[15px] border-b-2 border-main font-semibold mb-4'>OTHER CUSTOMERS ALSO BUY:</h3>
+                    <div className='mx-[-10px]'><CustomSlider products={relatedProducts} normal={true} slidesToShow={4} /></div>
+                </div>
+            }
+            {/* <div className='h-[400px]'></div> */}
+        </div >
     )
 }
 

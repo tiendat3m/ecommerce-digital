@@ -1,4 +1,4 @@
-import { Button, InputForm, MemberSidebar } from 'components'
+import { Button, InputForm, Loading, MemberSidebar } from 'components'
 import moment from 'moment'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -7,9 +7,10 @@ import defaultAvatar from 'assets/avatarDefault.png'
 import { apiUpdateCurrent } from 'apis'
 import { toast } from 'react-toastify'
 import { getCurrent } from 'store/user/asyncActions'
-const Personal = () => {
+import withBaseComponent from 'hocs/withBaseComponent'
+import { showModal } from 'store/app/appSlice'
+const Personal = ({ dispatch }) => {
     const { register, formState: { errors, isDirty }, handleSubmit, watch, reset } = useForm()
-    const dispatch = useDispatch()
     const { current } = useSelector(state => state.user)
     useEffect(() => {
         reset({
@@ -27,7 +28,9 @@ const Personal = () => {
             delete data.avatar
         }
         for (let i of Object.entries(data)) formData.append(i[0], i[1])
+        dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiUpdateCurrent(formData)
+        dispatch(showModal({ isShowModal: false, modalChildren: null }))
         if (response.success) {
             dispatch(getCurrent())
             toast.success(response.mes)
@@ -120,4 +123,4 @@ const Personal = () => {
     )
 }
 
-export default Personal
+export default withBaseComponent(Personal)

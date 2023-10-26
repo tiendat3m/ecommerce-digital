@@ -1,6 +1,7 @@
+import withBaseComponent from 'hocs/withBaseComponent'
 import React, { memo } from 'react'
 
-const MyCart = () => {
+const MyCart = (props) => {
     return (
         <div>
             MyCart
@@ -8,4 +9,4 @@ const MyCart = () => {
     )
 }
 
-export default memo(MyCart)
+export default withBaseComponent(memo(MyCart))
