@@ -8,6 +8,7 @@ import { formatMoney, formatPrice, renderStarFromNumber } from 'utils/helpers'
 import { productService } from 'utils/constants'
 import DOMPurify from 'dompurify';
 import clsx from 'clsx'
+import withBaseComponent from 'hocs/withBaseComponent'
 const settings = {
     dots: false,
     infinite: false,
@@ -25,7 +26,6 @@ const DetailProduct = ({ isQuickView, data }) => {
     const params = useParams()
     const [pid, setPid] = useState(null);
     const [category, setCategory] = useState(null);
-
     const [currentProduct, setCurrentProduct] = useState({
         title: '',
         thumb: '',
@@ -58,7 +58,7 @@ const DetailProduct = ({ isQuickView, data }) => {
             fetchProductData()
             fetchProducts()
         }
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
     }, [pid])
     useEffect(() => {
         if (pid) fetchProductData()
@@ -99,15 +99,15 @@ const DetailProduct = ({ isQuickView, data }) => {
     }
 
     return (
-        <div className={clsx('w-ful')}>
-            {!isQuickView && <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
+        <div className={clsx('w-full')}>
+            {!isQuickView && <div className='h-[81px] bg-gray-100  flex justify-center items-center'>
                 <div className='w-main flex gap-2 flex-col'>
                     <span className='font-semibold'>{currentProduct?.title || product?.title}</span>
                     <Breadcrumb title={currentProduct?.title || product?.title} category={product?.category} />
                 </div>
             </div>}
-            <div onClick={e => e.stopPropagation()} className={clsx('bg-white flex m-auto mt-4 gap-8', isQuickView ? 'max-w-[900px] max-h-[80vh] overflow-y-auto gap-20 p-8' : 'w-main')}>
-                <div className={clsx('flex flex-col gap-4 w-2/5', isQuickView && 'w-1/2')}>
+            <div onClick={e => e.stopPropagation()} className={clsx('bg-white flex m-auto mt-4 gap-8', isQuickView ? 'max-w-[1000px] max-h-[80vh] overflow-y-auto gap-30 p-8' : 'w-main')}>
+                <div className={clsx('flex flex-col gap-4 w-2/5', isQuickView && 'flex-1')}>
                     <div className={clsx('w-[458px] h-[458px] border')}>
                         < ReactImageMagnify {
                             ...{
@@ -138,7 +138,7 @@ const DetailProduct = ({ isQuickView, data }) => {
                         </Slider>
                     </div>
                 </div>
-                <div className={clsx('w-2/5 flex flex-col gap-5', isQuickView && 'w-1/2')}>
+                <div className={clsx('w-2/5 flex flex-col gap-5', isQuickView && 'flex-1')}>
                     <div className='flex items-center justify-between'>
                         <h2 className='text-[30px] font-semibold '>{formatMoney(formatPrice(currentProduct?.price || product?.price))} VND</h2>
                         <span className='text-sm text-main'>{`In stock: ${product?.quantity}`}</span>
@@ -206,4 +206,4 @@ const DetailProduct = ({ isQuickView, data }) => {
     )
 }
 
-export default DetailProduct
+export default withBaseComponent(DetailProduct)

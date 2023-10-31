@@ -5,18 +5,23 @@ import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateP
 import { MemberLayout, MyCart, Personal, Wishlist, History } from './pages/member';
 import { Modal } from './components';
 import path from './utils/path';
+import Cart from './components/products/Cart';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from './store/app/asyncActions';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { showCart } from 'store/app/appSlice';
 function App() {
-  const { isShowModal, modalChildren } = useSelector(state => state.app)
+  const { isShowModal, modalChildren, isShowCart } = useSelector(state => state.app)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getCategories())
   }, [])
   return (
-    <div className="font-main min-h-screen">
+    <div className="font-main h-screen relative">
+      {isShowCart && <div onClick={() => dispatch(showCart())} className='absolute inset-0 bg-overlay z-50 flex justify-end'>
+        <Cart />
+      </div>}
       {isShowModal && <Modal>{modalChildren}</Modal>}
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>

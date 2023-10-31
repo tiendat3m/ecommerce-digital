@@ -17,12 +17,10 @@ const Products = () => {
     const [params] = useSearchParams()
     const navigate = useNavigate()
     const fetchProductsByCategory = async (queries) => {
-        const response = await apiGetProducts(queries)
+        const response = await apiGetProducts({ ...queries, category })
         if (response.success) setProducts(response)
     }
-
     const { category } = useParams()
-
 
     useEffect(() => {
         let param = []

@@ -35,6 +35,13 @@ module.exports = {
         '7': '7 7 0%',
         '8': '8 8 0%',
       },
+      gridTemplateRows: {
+        // Simple 16 Row grid
+        '10': 'repeat(10, minmax(0, 1fr))',
+
+        // Complex site-specific Row configuration
+        'layout': '200px minmax(900px, 1fr) 100px',
+      },
       keyframes: {
         'slide-top': {
           '0%': {

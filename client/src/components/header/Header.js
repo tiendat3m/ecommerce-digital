@@ -4,14 +4,15 @@ import avatarDefault from 'assets/avatarDefault.png'
 import icons from 'utils/icons'
 import { Link } from 'react-router-dom'
 import path from 'utils/path'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { logout } from 'store/user/userSlice'
+import withBaseComponent from 'hocs/withBaseComponent'
+import { showCart } from 'store/app/appSlice'
 
-const Header = () => {
-  const { RiPhoneFill, MdEmail, BsHandbagFill, FaUserCircle } = icons
-  const [isShowOption, setIsShowOption] = useState(false);
-  const dispatch = useDispatch()
+const Header = ({ dispatch }) => {
   const { current } = useSelector(state => state.user)
+  const { RiPhoneFill, MdEmail, BsHandbagFill } = icons
+  const [isShowOption, setIsShowOption] = useState(false);
   useEffect(() => {
     const handleClickOutOptions = (e) => {
       const profile = document.getElementById('profile')
@@ -43,16 +44,16 @@ const Header = () => {
           <span className='text-[12px]'>Online Support 24/7</span>
         </div>
         {current && <Fragment>
-          <div className='cursor-pointer flex items-center px-6 border-r gap-2 justify-center' >
+          <div onClick={() => dispatch(showCart())} className='cursor-pointer flex items-center px-6 border-r gap-2 justify-center' >
             <BsHandbagFill color='red' size={20} />
-            <span>0 item(s)</span>
+            <span >{`${current?.cart?.length || 0} item(s)`}</span>
           </div>
           <div
             className='cursor-pointer flex items-center px-6 justify-center gap-2 relative'
             onClick={() => setIsShowOption(prev => !prev)}
             id='profile'
           >
-            <img src={current.avatar || avatarDefault} alt="" className='w-7 h-7 rounded-full object-contain' />
+            <img src={current?.avatar || avatarDefault} alt="" className='w-7 h-7 rounded-full object-contain' />
             <span>Profile</span>
             {isShowOption && <div onClick={(e) => e.stopPropagation()} className='absolute min-w-[150px] top-full left-[20%] bg-gray-100 py-2 border flex flex-col rounded-sm'>
               <Link to={`${path.MEMBER}/${path.PERSONAL}`} className='hover:bg-white p-2 w-full'>My Account</Link>
@@ -68,4 +69,4 @@ const Header = () => {
   )
 }
 
-export default memo(Header)
+export default withBaseComponent(memo(Header))
