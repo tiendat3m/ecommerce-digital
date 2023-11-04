@@ -313,13 +313,13 @@ const updateCart = asyncHandler(async (req, res) => {
         const response = await User.updateOne({ cart: { $elemMatch: alreadyProduct } }, { $set: { "cart.$.quantity": quantity, "cart.$.color": color } }, { new: true })
         return res.status(200).json({
             success: response ? true : false,
-            mes: response ? 'Updated Successfully' : 'Something went wrong'
+            mes: response ? 'Added to cart' : 'Something went wrong'
         })
     } else {
         const response = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity, color } } }, { new: true })
         return res.status(200).json({
             success: response ? true : false,
-            mes: response ? 'Updated Successfully' : 'Something went wrong'
+            mes: response ? 'Added to cart ' : 'Something went wrong'
         })
     }
 })
@@ -335,7 +335,7 @@ const removeProductInCart = asyncHandler(async (req, res) => {
     const response = await User.findByIdAndUpdate(_id, { $pull: { cart: { product: pid } } }, { new: true })
     return res.status(200).json({
         success: response ? true : false,
-        mes: response ? 'Updated Successfully' : 'Something went wrong'
+        mes: response ? 'Remove product successfully' : 'Something went wrong'
     })
 })
 // const deleteCart = asyncHandler(async(req, res) => {

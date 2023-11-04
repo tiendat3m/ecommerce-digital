@@ -4,6 +4,7 @@ import { Breadcrumb, InputSelect, Pagination, Product, SearchItem } from 'compon
 import { apiGetProducts } from 'apis'
 import Masonry from 'react-masonry-css'
 import { options } from 'utils/constants'
+import { useRef } from 'react'
 const breakpointColumnsObj = {
     default: 4,
     1100: 3,
@@ -15,13 +16,17 @@ const Products = () => {
     const [products, setProducts] = useState(null)
     const [activeClick, setActiveClick] = useState(null)
     const [params] = useSearchParams()
+    const scrollRef = useRef()
+    const { category } = useParams()
     const navigate = useNavigate()
     const fetchProductsByCategory = async (queries) => {
-        const response = await apiGetProducts({ ...queries, category })
+        if (category && category !== 'products') queries.category = category
+        const response = await apiGetProducts(queries)
         if (response.success) setProducts(response)
     }
-    const { category } = useParams()
-
+    useEffect(() => {
+        scrollRef.current.scrollIntoView({ block: 'start' })
+    }, [params.get('page')])
     useEffect(() => {
         let param = []
         for (let i of params.entries()) param.push(i)
@@ -69,7 +74,7 @@ const Products = () => {
 
 
     return (
-        <div className='w-full'>
+        <div ref={scrollRef} className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main flex gap-2 flex-col'>
                     <span className='font-semibold uppercase'>{category}</span>

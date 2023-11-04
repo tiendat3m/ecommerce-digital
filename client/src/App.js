@@ -11,6 +11,7 @@ import { getCategories } from './store/app/asyncActions';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { showCart } from 'store/app/appSlice';
+import { clsx } from 'clsx';
 function App() {
   const { isShowModal, modalChildren, isShowCart } = useSelector(state => state.app)
   const dispatch = useDispatch()
@@ -18,8 +19,8 @@ function App() {
     dispatch(getCategories())
   }, [])
   return (
-    <div className="font-main h-screen relative">
-      {isShowCart && <div onClick={() => dispatch(showCart())} className='absolute inset-0 bg-overlay z-50 flex justify-end'>
+    <div className={clsx('font-main h-screen relative')}>
+      {isShowCart && <div onClick={() => dispatch(showCart())} className='absolute inset-0 bg-overlay z-50 flex justify-end overflow-hidden'>
         <Cart />
       </div>}
       {isShowModal && <Modal>{modalChildren}</Modal>}
@@ -30,7 +31,7 @@ function App() {
           <Route path={path.DETAIL_PRODUCT__CATEGORY__PID__TITLE} element={<DetailProduct />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
-          <Route path={path.PRODUCTS} element={<Products />} />
+          <Route path={path.PRODUCTS__CATEGORY} element={<Products />} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={path.ALL} element={<Home />} />
         </Route>

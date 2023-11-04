@@ -42,6 +42,9 @@ module.exports = {
         // Complex site-specific Row configuration
         'layout': '200px minmax(900px, 1fr) 100px',
       },
+      gridRow: {
+        'span-7': 'span 7 / span 7',
+      },
       keyframes: {
         'slide-top': {
           '0%': {
@@ -51,6 +54,26 @@ module.exports = {
           '100%': {
             ' -webkit-transform': 'translateY(0);',
             transform: 'translateY(0);'
+          }
+        },
+        'slide-left': {
+          '0%': {
+            '-webkit-transform': 'translateX(40px);',
+            transform: 'translateX(40px);'
+          },
+          '100%': {
+            ' -webkit-transform': 'translateX(0);',
+            transform: 'translateX(0);'
+          }
+        },
+        'slide-right': {
+          '0%': {
+            '-webkit-transform': 'translateX(0px);',
+            transform: 'translateX(0px);'
+          },
+          '100%': {
+            ' -webkit-transform': 'translateX(400px);',
+            transform: 'translateX(400px);'
           }
         },
         'slide-top-sm': {
@@ -67,6 +90,8 @@ module.exports = {
       },
       animation: {
         'slide-top': 'slide-top 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'slide-left': 'slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'slide-right': 'slide-right 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'slide-top-sm': 'slide-top 0.3s linear both;',
       }
     },

@@ -9,6 +9,7 @@ import { productService } from 'utils/constants'
 import DOMPurify from 'dompurify';
 import clsx from 'clsx'
 import withBaseComponent from 'hocs/withBaseComponent'
+import { useRef } from 'react'
 const settings = {
     dots: false,
     infinite: false,
@@ -24,6 +25,7 @@ const DetailProduct = ({ isQuickView, data }) => {
     const [quantity, setQuantity] = useState(1)
     const [variant, setVariant] = useState(null)
     const params = useParams()
+    const scrollRef = useRef()
     const [pid, setPid] = useState(null);
     const [category, setCategory] = useState(null);
     const [currentProduct, setCurrentProduct] = useState({
@@ -97,9 +99,11 @@ const DetailProduct = ({ isQuickView, data }) => {
         e.stopPropagation()
         setCurrentImage(el)
     }
-
+    useEffect(() => {
+        scrollRef.current.scrollIntoView({ block: 'start' })
+    }, [pid])
     return (
-        <div className={clsx('w-full')}>
+        <div ref={scrollRef} className={clsx('w-full')}>
             {!isQuickView && <div className='h-[81px] bg-gray-100  flex justify-center items-center'>
                 <div className='w-main flex gap-2 flex-col'>
                     <span className='font-semibold'>{currentProduct?.title || product?.title}</span>
