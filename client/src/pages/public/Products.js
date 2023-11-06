@@ -21,7 +21,7 @@ const Products = () => {
     const navigate = useNavigate()
     const fetchProductsByCategory = async (queries) => {
         if (category && category !== 'products') queries.category = category
-        const response = await apiGetProducts(queries)
+        const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT })
         if (response.success) setProducts(response)
     }
     useEffect(() => {

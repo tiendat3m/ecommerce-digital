@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { apiGetProduct, apiGetProducts } from 'apis'
+import { createSearchParams, useParams } from 'react-router-dom'
+import { apiGetProduct, apiGetProducts, apiUpdateCart } from 'apis'
 import { Breadcrumb, Button, CustomSlider, ProductInfo, ProductService, SelectQuantity } from 'components'
 import Slider from 'react-slick'
 import ReactImageMagnify from 'react-image-magnify';
@@ -10,6 +10,11 @@ import DOMPurify from 'dompurify';
 import clsx from 'clsx'
 import withBaseComponent from 'hocs/withBaseComponent'
 import { useRef } from 'react'
+import { useSelector } from 'react-redux'
+import { getCurrent } from 'store/user/asyncActions'
+import Swal from 'sweetalert2'
+import path from 'utils/path'
+import { toast } from 'react-toastify'
 const settings = {
     dots: false,
     infinite: false,
@@ -17,7 +22,8 @@ const settings = {
     slidesToShow: 3,
     slidesToScroll: 1
 };
-const DetailProduct = ({ isQuickView, data }) => {
+const DetailProduct = ({ isQuickView, data, dispatch, navigate, location }) => {
+    const { current } = useSelector(state => state.user)
     const [currentImage, setCurrentImage] = useState(null)
     const [relatedProducts, setRelatedProducts] = useState(null)
     const [product, setProduct] = useState(null)
@@ -74,6 +80,14 @@ const DetailProduct = ({ isQuickView, data }) => {
                 images: product?.variants?.find(el => el.sku === variant)?.images,
                 color: product?.variants?.find(el => el.sku === variant)?.color,
             })
+        } else {
+            setCurrentProduct({
+                title: product?.title,
+                price: product?.price,
+                thumb: product?.thumb,
+                images: product?.images || [],
+                color: product?.color,
+            })
         }
     }, [variant])
     const rerender = useCallback(() => {
@@ -95,13 +109,44 @@ const DetailProduct = ({ isQuickView, data }) => {
             setQuantity(prev => +prev + 1)
         }
     }
+    useEffect(() => {
+        scrollRef.current.scrollIntoView({ block: 'start' })
+    }, [pid])
     const handelClickImage = (e, el) => {
         e.stopPropagation()
         setCurrentImage(el)
     }
-    useEffect(() => {
-        scrollRef.current.scrollIntoView({ block: 'start' })
-    }, [pid])
+    const handleAddToCart = async () => {
+        if (1) {
+            if (!current) return Swal.fire({
+                title: 'Almost...',
+                text: 'Please login first',
+                icon: 'info',
+                cancelButtonText: 'Not now!',
+                showCancelButton: true,
+                confirmButtonText: 'Go login page',
+
+            }).then((rs) => {
+                if (rs.isConfirmed) navigate({
+                    pathname: `/${path.LOGIN}`,
+                    search: createSearchParams({ redirect: location?.pathname }).toString()
+                })
+            })
+            const response = await apiUpdateCart({
+                pid,
+                color: currentProduct?.color || product?.color, quantity,
+                price: currentProduct?.price || product?.price,
+                thumbnail: currentProduct?.thumb || product?.thumb,
+                title: currentProduct?.title || product?.title
+            })
+            if (response.success) {
+                toast.success(response.mes)
+                dispatch(getCurrent())
+            }
+            else toast.error(response.mes)
+        }
+    }
+
     return (
         <div ref={scrollRef} className={clsx('w-full')}>
             {!isQuickView && <div className='h-[81px] bg-gray-100  flex justify-center items-center'>
@@ -182,7 +227,7 @@ const DetailProduct = ({ isQuickView, data }) => {
                     </div>
                     <div className='flex flex-col gap-8'>
                         <span className='flex items-center gap-2'><span className='font-semibold'>Quantity: </span><SelectQuantity quantity={quantity} handleQuantity={handleQuantity} handleChangeQuantity={handleChangeQuantity} /></span>
-                        <Button fw>
+                        <Button handleOnclick={handleAddToCart} fw>
                             Add to cart
                         </Button>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
-import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword } from './pages/public';
+import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword, DetailCart } from './pages/public';
 import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct } from './pages/admin';
 import { MemberLayout, MyCart, Personal, Wishlist, History } from './pages/member';
 import { Modal } from './components';
@@ -32,6 +32,7 @@ function App() {
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
           <Route path={path.PRODUCTS__CATEGORY} element={<Products />} />
+          <Route path={path.DETAIL_CART} element={<DetailCart />} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={path.ALL} element={<Home />} />
         </Route>

@@ -9,11 +9,12 @@ import { toast } from 'react-toastify'
 import { showCart } from 'store/app/appSlice'
 import { getCurrent } from 'store/user/asyncActions'
 import { formatMoney } from 'utils/helpers'
-const Cart = ({ dispatch }) => {
+import path from 'utils/path'
+const Cart = ({ dispatch, navigate }) => {
     const { current } = useSelector(state => state.user)
-    // console.log(current)
-    const removeCart = async (pid) => {
-        const response = await apiRemoveCart(pid)
+    console.log(current)
+    const removeCart = async (pid, color) => {
+        const response = await apiRemoveCart(pid, color)
         if (response.success) {
             dispatch(getCurrent())
         } else toast.error(response.mes)
@@ -30,24 +31,27 @@ const Cart = ({ dispatch }) => {
                 {current?.cart && current?.cart?.map(el => (
                     <div key={el?._id} className='flex justify-between items-center w-full border-b'>
                         <div key={el?._id} className='flex gap-2 py-6'>
-                            <img src={el?.product?.thumb} alt="" className='w-16 h-16 object-contain' />
+                            <img src={el?.thumbnail} alt="" className='w-16 h-16 object-contain' />
                             <div className='flex flex-col gap-1'>
-                                <span className='font-semibold text-main text-sm'>{el?.product?.title}</span>
+                                <span className='font-semibold text-main text-sm'>{el?.title}</span>
                                 <span className='text-xs italic'>{el?.color}</span>
-                                <span className='text-xs'>{formatMoney(el?.product?.price) + ' VND'}</span>
+                                <span className='text-xs'>{formatMoney(el?.price) + ' VND'}</span>
                             </div>
                         </div>
-                        <span onClick={() => removeCart(el?.product?._id)} className='h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-700 cursor-pointer'><MdOutlineDeleteOutline size={24} /></span>
+                        <span onClick={() => removeCart(el?.product?._id, el.color)} className='h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-700 cursor-pointer'><MdOutlineDeleteOutline size={24} /></span>
                     </div>
                 ))}
             </section>
             <div className='row-span-2 h-full flex flex-col justify-between'>
                 <div className='flex items-center my-4 justify-between pt-4 border-t'>
                     <span>Subtotal: </span>
-                    <span>{formatMoney(current?.cart?.reduce((sum, el) => sum + Number(el?.product?.price), 0)) + 'VND'}</span>
+                    <span>{formatMoney(current?.cart?.reduce((sum, el) => sum + Number(el?.price), 0)) + 'VND'}</span>
                 </div>
                 <span className='text-center text-gray-700 italic text-sm'>Shipping, taxes, and discounts calculated at checkout.</span>
-                <Button style='rounded-none w-full bg-main py-2'>Shopping Cart</Button>
+                <Button handleOnclick={() => {
+                    dispatch(showCart())
+                    navigate(`/${path.DETAIL_CART}`)
+                }} style='rounded-none w-full bg-main py-2'>Shopping Cart</Button>
             </div>
         </div>
     )

@@ -19,6 +19,7 @@ const { BsFillCartPlusFill, FaRegEye, AiFillHeart, BsCartCheckFill } = icons
 const Product = ({ productData, isNew, normal, dispatch, navigate }) => {
     const [isShowOption, setIsShowOption] = useState(false);
     const { current } = useSelector(state => state.user)
+    console.log(productData)
     const handleClickOptions = async (e, flag) => {
         e.stopPropagation()
         if (flag === 'CART') {
@@ -33,7 +34,13 @@ const Product = ({ productData, isNew, normal, dispatch, navigate }) => {
             }).then((rs) => {
                 if (rs.isConfirmed) navigate(`/${path.LOGIN}`)
             })
-            const response = await apiUpdateCart({ pid: productData?._id, color: productData?.color })
+            const response = await apiUpdateCart({
+                pid: productData?._id,
+                color: productData?.color,
+                title: productData?.title,
+                price: productData?.price,
+                thumbnail: productData?.thumb
+            })
             if (response.success) {
                 toast.success(response.mes)
                 dispatch(getCurrent())
