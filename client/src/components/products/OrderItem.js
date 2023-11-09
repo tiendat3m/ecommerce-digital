@@ -1,12 +1,11 @@
 import SelectQuantity from 'components/common/SelectQuantity'
-import React from 'react'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import withBaseComponent from 'hocs/withBaseComponent'
+import React, { useEffect, useState } from 'react'
+import { updateCart } from 'store/user/userSlice'
 import { formatMoney } from 'utils/helpers'
 
-const OrderItem = ({ el }) => {
-    const { current } = useSelector(state => state.user)
-    const [quantity, setQuantity] = useState(1)
+const OrderItem = ({ el, defaultQuantity = 1, dispatch }) => {
+    const [quantity, setQuantity] = useState(() => defaultQuantity)
     const handleQuantity = (number) => {
         if (+number > 1) setQuantity(number)
     }
@@ -18,7 +17,9 @@ const OrderItem = ({ el }) => {
             setQuantity(prev => +prev + 1)
         }
     }
-    console.log(current)
+    useEffect(() => {
+        dispatch(updateCart({ pid: el.product?._id, color: el.color, quantity }))
+    }, [quantity])
     return (
         <div>
             <div className='w-main mx-auto border font-bold py-3 grid grid-cols-10 '>
@@ -44,4 +45,4 @@ const OrderItem = ({ el }) => {
     )
 }
 
-export default OrderItem
+export default withBaseComponent(OrderItem)

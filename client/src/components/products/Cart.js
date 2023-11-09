@@ -11,8 +11,8 @@ import { getCurrent } from 'store/user/asyncActions'
 import { formatMoney } from 'utils/helpers'
 import path from 'utils/path'
 const Cart = ({ dispatch, navigate }) => {
-    const { current } = useSelector(state => state.user)
-    console.log(current)
+    const { currentCart } = useSelector(state => state.user)
+    // console.log(current)
     const removeCart = async (pid, color) => {
         const response = await apiRemoveCart(pid, color)
         if (response.success) {
@@ -27,15 +27,21 @@ const Cart = ({ dispatch, navigate }) => {
                 <span onClick={() => dispatch(showCart())} className='cursor-pointer'><AiFillCloseCircle size={24} /></span>
             </header>
             <section className='row-span-7 flex flex-col h-full max-h-full overflow-y-auto pr-6'>
-                {!current?.cart && <span className='italic text-xs'>Your cart is empty</span>}
-                {current?.cart && current?.cart?.map(el => (
+                {!currentCart && <span className='italic text-xs text-white'>Your cart is empty</span>}
+                {currentCart && currentCart?.map(el => (
                     <div key={el?._id} className='flex justify-between items-center w-full border-b'>
                         <div key={el?._id} className='flex gap-2 py-6'>
                             <img src={el?.thumbnail} alt="" className='w-16 h-16 object-contain' />
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col gap-1 justify-center'>
                                 <span className='font-semibold text-main text-sm'>{el?.title}</span>
-                                <span className='text-xs italic'>{el?.color}</span>
-                                <span className='text-xs'>{formatMoney(el?.price) + ' VND'}</span>
+                                <span className='text-xs italics'>
+                                    {el?.color}
+                                </span>
+                                <span className='text-xs'>
+                                    {formatMoney(el?.price) + ' VND'}
+
+                                    <span className='text-xs italic ml-5'>{`Quantity : ${el?.quantity}`}</span>
+                                </span>
                             </div>
                         </div>
                         <span onClick={() => removeCart(el?.product?._id, el.color)} className='h-10 w-10 rounded-full flex items-center justify-center hover:bg-gray-700 cursor-pointer'><MdOutlineDeleteOutline size={24} /></span>
@@ -45,7 +51,7 @@ const Cart = ({ dispatch, navigate }) => {
             <div className='row-span-2 h-full flex flex-col justify-between'>
                 <div className='flex items-center my-4 justify-between pt-4 border-t'>
                     <span>Subtotal: </span>
-                    <span>{formatMoney(current?.cart?.reduce((sum, el) => sum + Number(el?.price), 0)) + 'VND'}</span>
+                    <span>{formatMoney(currentCart?.reduce((sum, el) => sum + Number(el?.price * el.quantity), 0)) + 'VND'}</span>
                 </div>
                 <span className='text-center text-gray-700 italic text-sm'>Shipping, taxes, and discounts calculated at checkout.</span>
                 <Button handleOnclick={() => {

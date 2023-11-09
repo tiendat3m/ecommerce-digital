@@ -19,7 +19,7 @@ const { BsFillCartPlusFill, FaRegEye, AiFillHeart, BsCartCheckFill } = icons
 const Product = ({ productData, isNew, normal, dispatch, navigate }) => {
     const [isShowOption, setIsShowOption] = useState(false);
     const { current } = useSelector(state => state.user)
-    console.log(productData)
+    // console.log(productData)
     const handleClickOptions = async (e, flag) => {
         e.stopPropagation()
         if (flag === 'CART') {
