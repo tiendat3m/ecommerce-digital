@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword, DetailCart } from './pages/public';
 import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct } from './pages/admin';
-import { MemberLayout, MyCart, Personal, Wishlist, History } from './pages/member';
+import { MemberLayout, MyCart, Personal, Wishlist, History, Checkout } from './pages/member';
 import { Modal } from './components';
 import path from './utils/path';
 import Cart from './components/products/Cart';
@@ -32,7 +32,7 @@ function App() {
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.OUR_SERVICES} element={<Services />} />
           <Route path={path.PRODUCTS__CATEGORY} element={<Products />} />
-          <Route path={path.DETAIL_CART} element={<DetailCart />} />
+          {/* <Route path={path.DETAIL_CART} element={<DetailCart />} /> */}
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={path.ALL} element={<Home />} />
         </Route>
@@ -46,12 +46,13 @@ function App() {
         </Route>
         <Route path={path.MEMBER} element={<MemberLayout />}>
           <Route path={path.PERSONAL} element={<Personal />} />
-          <Route path={path.MY_CART} element={<MyCart />} />
+          <Route path={path.MY_CART} element={<DetailCart />} />
           <Route path={path.HISTORY} element={<History />} />
           <Route path={path.WISHLIST} element={<Wishlist />} />
         </Route>
         <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
+        <Route path={path.CHECKOUT} element={<Checkout />} />
 
       </Routes>
       <ToastContainer

@@ -4,7 +4,7 @@ import newLabel from 'assets/new.png'
 import trendingLabel from 'assets/trending.png'
 import SelectOption from '../search/SelectOption'
 import icons from 'utils/icons'
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams } from 'react-router-dom'
 import withBaseComponent from 'hocs/withBaseComponent'
 import { showModal } from 'store/app/appSlice'
 import { DetailProduct } from 'pages/public'
@@ -16,7 +16,7 @@ import Swal from 'sweetalert2'
 import path from 'utils/path'
 
 const { BsFillCartPlusFill, FaRegEye, AiFillHeart, BsCartCheckFill } = icons
-const Product = ({ productData, isNew, normal, dispatch, navigate }) => {
+const Product = ({ productData, isNew, normal, dispatch, navigate, location }) => {
     const [isShowOption, setIsShowOption] = useState(false);
     const { current } = useSelector(state => state.user)
     // console.log(productData)
@@ -32,11 +32,15 @@ const Product = ({ productData, isNew, normal, dispatch, navigate }) => {
                 confirmButtonText: 'Go login page',
 
             }).then((rs) => {
-                if (rs.isConfirmed) navigate(`/${path.LOGIN}`)
+                if (rs.isConfirmed) navigate({
+                    pathname: `/${path.LOGIN}`,
+                    search: createSearchParams({ redirect: location.pathname }).toString()
+                })
             })
             const response = await apiUpdateCart({
                 pid: productData?._id,
                 color: productData?.color,
+                quantity: 1,
                 title: productData?.title,
                 price: productData?.price,
                 thumbnail: productData?.thumb
@@ -73,7 +77,7 @@ const Product = ({ productData, isNew, normal, dispatch, navigate }) => {
                     {isShowOption && <span className='absolute bottom-[-10px] left-0 right-0 flex items-center justify-center gap-3 animate-slide-top'>
                         <span title='Wishlist' onClick={(e) => handleClickOptions(e, 'WISHLIST')}><SelectOption icons={<AiFillHeart />} /></span>
                         {current?.cart?.some(el => el?.product?._id === productData?._id.toString())
-                            ? <span><SelectOption icons={<BsCartCheckFill color='green' />} /></span>
+                            ? <span onClick={e => e.stopPropagation()}><SelectOption icons={<BsCartCheckFill color='green' />} /></span>
                             : <span title='Add to Cart' onClick={(e) => handleClickOptions(e, 'CART')}><SelectOption icons={<BsFillCartPlusFill />} /></span>
                         }
                         <span title='QuickView' onClick={(e) => handleClickOptions(e, 'QUICKVIEW')}><SelectOption icons={<FaRegEye />} /></span>

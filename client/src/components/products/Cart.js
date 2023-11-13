@@ -38,7 +38,7 @@ const Cart = ({ dispatch, navigate }) => {
                                     {el?.color}
                                 </span>
                                 <span className='text-xs'>
-                                    {formatMoney(el?.price) + ' VND'}
+                                    {formatMoney(el?.price * el.quantity) + ' VND'}
 
                                     <span className='text-xs italic ml-5'>{`Quantity : ${el?.quantity}`}</span>
                                 </span>
@@ -56,7 +56,7 @@ const Cart = ({ dispatch, navigate }) => {
                 <span className='text-center text-gray-700 italic text-sm'>Shipping, taxes, and discounts calculated at checkout.</span>
                 <Button handleOnclick={() => {
                     dispatch(showCart())
-                    navigate(`/${path.DETAIL_CART}`)
+                    navigate(`/${path.MEMBER}/${path.DETAIL_CART}`)
                 }} style='rounded-none w-full bg-main py-2'>Shopping Cart</Button>
             </div>
         </div>
