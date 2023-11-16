@@ -59,7 +59,7 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
     const handlePreviewImages = async (files) => {
         const imagesPreview = []
         for (let file of files) {
-            if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/webp') {
+            if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/webp' && file.type === 'image/jpg') {
                 toast.warning('File does not support')
                 return
             }
