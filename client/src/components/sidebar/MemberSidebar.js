@@ -4,6 +4,7 @@ import { adminSidebar, memberSidebar } from 'utils/constants'
 import { Link, NavLink } from 'react-router-dom'
 import clsx from 'clsx'
 import { BsFillCaretDownFill, BsFillCaretRightFill } from 'react-icons/bs'
+import { ImForward } from 'react-icons/im'
 import { useSelector } from 'react-redux'
 
 
@@ -18,10 +19,10 @@ const MemberSidebar = () => {
     }
     return (
         <div className='py-4 bg-[#ffd7d7] h-full'>
-            <Link to={'/'} className='flex flex-col justify-center gap-3 p-4 items-center '>
+            <div className='flex flex-col justify-center gap-3 p-4 items-center '>
                 <img src={current?.avatar || avatar} alt="" className='h-16 w-16 object-contain rounded-full' />
                 <span className='font-semibold'>{`${current.firstname} ${current.lastname}`}</span>
-            </Link>
+            </div>
             <div>
                 {memberSidebar?.map(el => (
                     <Fragment key={el.id} className='flex'>
@@ -56,6 +57,10 @@ const MemberSidebar = () => {
                         </div>} */}
                     </Fragment>
                 ))}
+                <NavLink to={'/'} className={clsx(notActiveStyle)}>
+                    <ImForward />
+                    Go Home
+                </NavLink>
             </div>
         </div>
     )

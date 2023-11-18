@@ -2,12 +2,35 @@ import { Breadcrumb, Button, OrderItem } from 'components'
 import withBaseComponent from 'hocs/withBaseComponent'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import { formatMoney } from 'utils/helpers'
 import path from 'utils/path'
 
-const DetailCart = ({ location }) => {
-    const { currentCart } = useSelector(state => state.user)
+const DetailCart = ({ location, navigate }) => {
+    const { currentCart, current } = useSelector(state => state.user)
+    const handleSubmit = () => {
+        if (!current?.address) return Swal.fire({
+            icon: 'info',
+            title: 'Almost',
+            text: 'Please update your address before checkout',
+            showCancelButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Go Update',
+            cancelButtonText: 'Cancle'
+        }).then((rs) => {
+            if (rs.isConfirmed) {
+                navigate({
+                    pathname: `/${path.MEMBER}/${path.PERSONAL}`,
+                    search: createSearchParams({ redirect: location.pathname }).toString()
+                })
+            }
+        })
+        else {
+            window.open(`/${path?.CHECKOUT}`, '_blank')
+        }
+    }
+
     return (
         <div className='w-full'>
             <div className='h-[81px] flex justify-center items-center bg-gray-100'>
@@ -33,9 +56,12 @@ const DetailCart = ({ location }) => {
                 <span className='text-sm italic text-gray-600'>
                     Shipping, taxes, and discounts calculated at checkout.
                 </span>
-                <Link target='_blank' className='px-4 py-2 rounded-md text-white bg-main mb-4 outline-none' to={`/${path.CHECKOUT}`}>
+                <Button handleOnclick={handleSubmit}>
+                    Checkout
+                </Button>
+                {/* <Link target='_blank' className='px-4 py-2 rounded-md text-white bg-main mb-4 outline-none' to={`/${path.CHECKOUT}`}>
                     Check Out
-                </Link>
+                </Link> */}
             </div>
         </div>
     )

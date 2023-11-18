@@ -9,16 +9,19 @@ import { toast } from 'react-toastify'
 import { getCurrent } from 'store/user/asyncActions'
 import withBaseComponent from 'hocs/withBaseComponent'
 import { showModal } from 'store/app/appSlice'
-const Personal = ({ dispatch }) => {
+import { useSearchParams } from 'react-router-dom'
+const Personal = ({ dispatch, navigate }) => {
     const { register, formState: { errors, isDirty }, handleSubmit, watch, reset } = useForm()
     const { current } = useSelector(state => state.user)
+    const [searchParams] = useSearchParams()
     useEffect(() => {
         reset({
             firstname: current?.firstname || '',
             lastname: current?.lastname || '',
             email: current?.email || '',
             mobile: current?.mobile || '',
-            avatar: current?.avatar || ''
+            avatar: current?.avatar || '',
+            address: current?.address || ''
         })
     }, [current])
     const handleSaveProfile = async (data) => {
@@ -34,6 +37,7 @@ const Personal = ({ dispatch }) => {
         if (response.success) {
             dispatch(getCurrent())
             toast.success(response.mes)
+            if (searchParams.get('redirect')) navigate(searchParams.get('redirect'))
         } else toast.error(response.mes)
 
     }
@@ -91,6 +95,16 @@ const Personal = ({ dispatch }) => {
                             value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
                             message: 'Phone invalid'
                         }
+                    }}
+                    fullWidth
+                />
+                <InputForm
+                    label={'Addrress'}
+                    register={register}
+                    errors={errors}
+                    id='address'
+                    validate={{
+                        required: 'Require fill',
                     }}
                     fullWidth
                 />
