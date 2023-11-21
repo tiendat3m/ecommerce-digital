@@ -32,13 +32,13 @@ const DetailCart = ({ location, navigate }) => {
     }
 
     return (
-        <div className='w-full'>
-            <div className='h-[81px] flex justify-center items-center bg-gray-100'>
+        <div className='w-full flex flex-col gap-4 relative'>
+            <div className='h-[75px]  w-full flex justify-center items-center bg-gray-100'>
                 <div className='w-main'>
                     <h2 className='font-bold text-2xl uppercase'>My Cart</h2>
                 </div>
             </div>
-            <div className='flex flex-col border w-main my-8 mx-auto '>
+            <div className='flex flex-col border w-main my-8 mx-auto'>
                 <div className='w-main mx-auto grid grid-cols-10 font-bold py-3 bg-main text-white'>
                     <span className='col-span-6 w-full text-center'></span>
                     <span className='col-span-1 w-full text-center'>Quantity</span>

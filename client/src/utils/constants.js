@@ -308,3 +308,15 @@ export const blockStatus = [
         value: 'Active'
     },
 ]
+
+export const statusOrders = [
+    {
+        label: 'Cancelled',
+        value: 'Cancelled'
+    },
+    {
+        label: 'Succeed',
+        value: 'Succeed'
+    },
+
+]

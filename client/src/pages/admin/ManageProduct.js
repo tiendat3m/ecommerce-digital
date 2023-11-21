@@ -9,12 +9,10 @@ import { useForm } from 'react-hook-form'
 import { Link, createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { formatMoney } from 'utils/helpers'
 import UpdateProduct from './UpdateProduct'
-import path from 'utils/path'
 import { useCallback } from 'react'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { MdEditNote, MdDeleteOutline, MdOutlineDashboardCustomize } from 'react-icons/md'
-
 
 const ManageProduct = () => {
     const [products, setProducts] = useState(null)
@@ -39,8 +37,6 @@ const ManageProduct = () => {
             setCounts(response.counts)
         }
     }
-
-
     const queriesDebounce = useDebounce(watch('q'), 800)
     useEffect(() => {
         if (queriesDebounce) {
@@ -92,7 +88,6 @@ const ManageProduct = () => {
                 <form
                     className='w-[40%] px-4'
                     action=""
-                // onSubmit={handleSubmit(handleSearchProducts)}
                 >
                     <InputForm
                         id={'q'}

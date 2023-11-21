@@ -1,6 +1,6 @@
 const Order = require('../models/order')
 const User = require('../models/user')
-const Coupon = require('../models/coupon')
+// const Coupon = require('../models/coupon')
 const asyncHandler = require('express-async-handler')
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -9,7 +9,7 @@ const createOrder = asyncHandler(async (req, res) => {
     if (address) {
         await User.findByIdAndUpdate(_id, { address, cart: [] })
     }
-    const data = { products, total, postedBy: _id }
+    const data = { products, total, orderBy: _id }
     if (status) data.status = status
     const rs = await Order.create(data)
     return res.status(200).json({
@@ -29,26 +29,150 @@ const updateStatus = asyncHandler(async (req, res) => {
     })
 })
 
-const getUserOrder = asyncHandler(async (req, res) => {
+const getUserOrders = asyncHandler(async (req, res) => {
+    const queries = { ...req.query }
     const { _id } = req.user
-    const reponse = await Order.find({ orderBy: _id })
-    return res.status(200).json({
-        success: reponse ? true : false,
-        reponse: reponse ? reponse : 'Something went wrong',
+
+    //tách các trường đặc biệt ra khỏi query
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(el => delete queries[el])
+
+    //format lại các operator cho đúng cú pháp của mongoose
+    let queryString = JSON.stringify(queries)
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchedEl => `$${matchedEl}`)
+    const formatedQueries = JSON.parse(queryString)
+    // let colorQueryObject = {}
+    // // filtering
+    // if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
+    // if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
+    // if (queries?.color) {
+    //     delete formatedQueries.color
+    //     const colorArr = queries.color?.split(',')
+    //     const colorQuery = colorArr.map(el => ({ color: { $regex: el, $options: 'i' } }))
+    //     colorQueryObject = { $or: colorQuery }
+    // }
+    // let queryObject = {}
+    // if (queries?.q) {
+    //     delete formatedQueries.q
+    //     queryObject = {
+    //         $or: [
+    //             { title: { $regex: queries.q, $options: 'i' } },
+    //             { category: { $regex: queries.q, $options: 'i' } },
+    //             { brand: { $regex: queries.q, $options: 'i' } },
+    //             { color: { $regex: queries.q, $options: 'i' } },
+    //             { description: { $regex: queries.q, $options: 'i' } },
+    //         ]
+    //     }
+    // }
+    const qr = { ...formatedQueries, orderBy: _id }
+    let queryCommand = Order.find(qr)
+
+    // sorting
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    // fields
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+
+    // pagination
+    // limit: số object lấy về khi gọi api
+    // skip: 
+    // page=2&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || process.env.LIMIT_PRODUCT;
+    const skip = (page - 1) * limit;
+
+    queryCommand = queryCommand.skip(skip).limit(limit);
+
+    //execute query
+    queryCommand.exec(async (err, response) => {
+        if (err) throw new Error(err.message)
+        const counts = await Order.find(qr).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            orders: response ? response : 'Cannot get product',
+        })
     })
 })
+
 
 const getOrders = asyncHandler(async (req, res) => {
-    const reponse = await Order.find()
-    return res.status(200).json({
-        success: reponse ? true : false,
-        reponse: reponse ? reponse : 'Something went wrong',
+    const queries = { ...req.query }
+
+    //tách các trường đặc biệt ra khỏi query
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(el => delete queries[el])
+
+    //format lại các operator cho đúng cú pháp của mongoose
+    let queryString = JSON.stringify(queries)
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchedEl => `$${matchedEl}`)
+    const formatedQueries = JSON.parse(queryString)
+    // let colorQueryObject = {}
+    // // filtering
+    // if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
+    // if (queries?.category) formatedQueries.category = { $regex: queries.category, $options: 'i' }
+    // if (queries?.color) {
+    //     delete formatedQueries.color
+    //     const colorArr = queries.color?.split(',')
+    //     const colorQuery = colorArr.map(el => ({ color: { $regex: el, $options: 'i' } }))
+    //     colorQueryObject = { $or: colorQuery }
+    // }
+    // let queryObject = {}
+    // if (queries?.q) {
+    //     delete formatedQueries.q
+    //     queryObject = {
+    //         $or: [
+    //             { title: { $regex: queries.q, $options: 'i' } },
+    //             { category: { $regex: queries.q, $options: 'i' } },
+    //             { brand: { $regex: queries.q, $options: 'i' } },
+    //             { color: { $regex: queries.q, $options: 'i' } },
+    //             { description: { $regex: queries.q, $options: 'i' } },
+    //         ]
+    //     }
+    // }
+    const qr = { formatedQueries }
+    let queryCommand = Order.find(qr)
+
+    // sorting
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    // fields
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+
+    // pagination
+    // limit: số object lấy về khi gọi api
+    // skip: 
+    // page=2&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || process.env.LIMIT_PRODUCT;
+    const skip = (page - 1) * limit;
+
+    queryCommand = queryCommand.skip(skip).limit(limit);
+
+    //execute query
+    queryCommand.exec(async (err, response) => {
+        if (err) throw new Error(err.message)
+        const counts = await Order.find(qr).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            orders: response ? response : 'Cannot get product',
+        })
     })
 })
-
 module.exports = {
     createOrder,
     updateStatus,
-    getUserOrder,
+    getUserOrders,
     getOrders
 }
