@@ -115,7 +115,7 @@ const getCurrent = asyncHandler(async (req, res) => {
             path: 'product',
             select: 'title thumb price '
         }
-    })
+    }).populate('wishlist', 'title thumb price color')
     return res.status(200).json({
         success: user ? true : false,
         rs: user ? user : 'user not found'
@@ -356,6 +356,34 @@ const removeProductInCart = asyncHandler(async (req, res) => {
 //     })
 // })
 
+const updateUserWishlist = asyncHandler(async (req, res) => {
+    const { pid } = req.params
+    const { _id } = req.user
+    const user = await User.findById(_id)
+    const alreadyInWishlist = user.wishlist?.find(el => el.toString() === pid)
+    if (alreadyInWishlist) {
+        const response = await User.findByIdAndUpdate(
+            _id,
+            { $pull: { wishlist: pid } },
+            { new: true }
+        )
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Updated wishlist successfully' : 'Failed to update wishlist'
+        })
+    } else {
+        const response = await User.findByIdAndUpdate(
+            _id,
+            { $push: { wishlist: pid } },
+            { new: true }
+        )
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Updated wishlist successfully' : 'Failed to update wishlist'
+        })
+    }
+})
+
 module.exports = {
     register,
     login,
@@ -372,5 +400,6 @@ module.exports = {
     updateCart,
     finalRegister,
     createUsers,
-    removeProductInCart
+    removeProductInCart,
+    updateUserWishlist
 }

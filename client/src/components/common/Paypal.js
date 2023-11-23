@@ -30,6 +30,7 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload, setIsSuccess })
             setIsSuccess(true)
             setTimeout(() => {
                 Swal.fire('Congrats!', 'Order Successfully', 'success').then(() => {
+                    // window.close()
                     navigate('/')
                 })
             }, 500)

@@ -2,10 +2,12 @@ import React from 'react'
 import { Sidebar, Banner, BestSeller, DealDaily, FeatureProduct, CustomSlider } from '../../components'
 import { useSelector } from 'react-redux'
 import icons from 'utils/icons'
+import withBaseComponent from 'hocs/withBaseComponent'
+import { createSearchParams } from 'react-router-dom'
 
 const { MdKeyboardArrowRight } = icons
 
-const Home = () => {
+const Home = ({ navigate }) => {
 
     const { newProducts } = useSelector(state => state.products)
     const { categories } = useSelector(state => state.app)
@@ -49,7 +51,11 @@ const Home = () => {
                                             {el?.brand?.map((item) => (
                                                 <li
                                                     key={item}
-                                                    className='flex items-center mb-[5px]'
+                                                    className='flex items-center hover:underline cursor-pointer hover:text-gray-800 mb-[5px]'
+                                                    onClick={() => navigate({
+                                                        pathname: `/${el.title.toLowerCase()}`,
+                                                        search: createSearchParams({ brand: item }).toString()
+                                                    })}
                                                 >
                                                     <MdKeyboardArrowRight size={14} />
                                                     {item}
@@ -70,4 +76,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default withBaseComponent(Home)

@@ -8,18 +8,18 @@ import { Link, createSearchParams } from 'react-router-dom'
 import withBaseComponent from 'hocs/withBaseComponent'
 import { showModal } from 'store/app/appSlice'
 import { DetailProduct } from 'pages/public'
-import { apiUpdateCart } from 'apis'
+import { apiUpdateCart, apiUpdateUserWishlist } from 'apis'
 import { toast } from 'react-toastify'
 import { getCurrent } from 'store/user/asyncActions'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import path from 'utils/path'
+import clsx from 'clsx'
 
 const { BsFillCartPlusFill, FaRegEye, AiFillHeart, BsCartCheckFill } = icons
-const Product = ({ productData, isNew, normal, dispatch, navigate, location }) => {
+const Product = ({ productData, isNew, normal, dispatch, navigate, location, pid, className }) => {
     const [isShowOption, setIsShowOption] = useState(false);
     const { current } = useSelector(state => state.user)
-    // console.log(productData)
     const handleClickOptions = async (e, flag) => {
         e.stopPropagation()
         if (flag === 'CART') {
@@ -54,10 +54,18 @@ const Product = ({ productData, isNew, normal, dispatch, navigate, location }) =
         if (flag === 'QUICKVIEW') {
             dispatch(showModal({ isShowModal: true, modalChildren: <DetailProduct data={{ pid: productData?._id, category: productData?.category }} isQuickView /> }))
         }
+        if (flag === 'WISHLIST') {
+            const response = await apiUpdateUserWishlist(pid)
+            if (response.success) {
+                dispatch(getCurrent())
+                toast.success(response.mes)
+            } else toast.error(response.mes)
+
+        }
     }
 
     return (
-        <div className='w-full text-base px-[10px]'>
+        <div className={clsx('w-full text-base px-[10px]', className)}>
             <div
                 className='w-full border p-[15px] flex flex-col items-center'
                 onClick={e => {
@@ -75,7 +83,11 @@ const Product = ({ productData, isNew, normal, dispatch, navigate, location }) =
             >
                 <div className='w-full relative'>
                     {isShowOption && <span className='absolute bottom-[-10px] left-0 right-0 flex items-center justify-center gap-3 animate-slide-top'>
-                        <span title='Wishlist' onClick={(e) => handleClickOptions(e, 'WISHLIST')}><SelectOption icons={<AiFillHeart />} /></span>
+                        <span
+                            title='Wishlist'
+                            onClick={(e) => handleClickOptions(e, 'WISHLIST')}>
+                            <SelectOption icons={<AiFillHeart color={current?.wishlist?.some(i => i._id === pid) ? 'red' : 'black'} />} />
+                        </span>
                         {current?.cart?.some(el => el?.product?._id === productData?._id.toString())
                             ? <span onClick={e => e.stopPropagation()}><SelectOption icons={<BsCartCheckFill color='green' />} /></span>
                             : <span title='Add to Cart' onClick={(e) => handleClickOptions(e, 'CART')}><SelectOption icons={<BsFillCartPlusFill />} /></span>

@@ -13,9 +13,9 @@ const History = ({ navigate, location }) => {
     const [orders, setOrders] = useState(null);
     const [counts, setCounts] = useState(0);
     const [params] = useSearchParams()
-    console.log(orders)
+    // console.log(orders)
     const { register, formState: { errors }, watch, setValue } = useForm()
-    const q = watch('q')
+    // const q = watch('q')
     const status = watch('status')
     const fetchOrders = async (params) => {
         const response = await apiGetUserOrders({

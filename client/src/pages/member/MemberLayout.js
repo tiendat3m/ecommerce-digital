@@ -11,7 +11,7 @@ const MemberLayout = () => {
             <div className='min-h-screen w-[327px]'>
                 <MemberSidebar />
             </div>
-            <div className='flex-8 '>
+            <div className='flex-8 bg-gray-100'>
                 <Outlet />
             </div>
         </div>
