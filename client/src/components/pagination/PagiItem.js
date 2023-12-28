@@ -1,9 +1,8 @@
 import React, { memo, useEffect } from 'react'
 import clsx from 'clsx'
-import { createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 const PagiItem = ({ children }) => {
     const [params] = useSearchParams()
-    const { category } = useParams()
     const location = useLocation()
     const navigate = useNavigate()
     useEffect(() => {

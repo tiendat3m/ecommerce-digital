@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom'
 import { Public, Home, Login, Services, DetailProduct, Blogs, Products, FAQ, FinalRegister, ResetPassword, DetailCart } from './pages/public';
 import { AdminLayout, ManageOrder, DashBoard, ManageProduct, ManageUser, CreateProduct } from './pages/admin';
-import { MemberLayout, MyCart, Personal, Wishlist, History, Checkout } from './pages/member';
+import { MemberLayout, Personal, Wishlist, History, Checkout } from './pages/member';
 import { Modal } from './components';
 import path from './utils/path';
 import Cart from './components/products/Cart';
@@ -67,7 +67,6 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
       <ToastContainer />
     </div>
 

@@ -6,7 +6,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { formatMoney } from 'utils/helpers'
 import UpdateProduct from './UpdateProduct'
 import { useCallback } from 'react'
@@ -23,7 +23,7 @@ const ManageProduct = () => {
     const [editProduct, setEditProduct] = useState(null)
     const [customizeVariant, setCustomizeVariant] = useState(null)
     const [update, setUpdate] = useState(false)
-    const { register, formState: { errors }, handleSubmit, watch, reset } = useForm()
+    const { register, formState: { errors }, watch } = useForm()
     // const handleSearchProducts = (data) => {
     //     console.log(data)
     // }

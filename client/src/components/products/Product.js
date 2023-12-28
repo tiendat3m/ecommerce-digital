@@ -4,7 +4,7 @@ import newLabel from 'assets/new.png'
 import trendingLabel from 'assets/trending.png'
 import SelectOption from '../search/SelectOption'
 import icons from 'utils/icons'
-import { Link, createSearchParams } from 'react-router-dom'
+import { createSearchParams } from 'react-router-dom'
 import withBaseComponent from 'hocs/withBaseComponent'
 import { showModal } from 'store/app/appSlice'
 import { DetailProduct } from 'pages/public'
@@ -17,6 +17,7 @@ import path from 'utils/path'
 import clsx from 'clsx'
 
 const { BsFillCartPlusFill, FaRegEye, AiFillHeart, BsCartCheckFill } = icons
+
 const Product = ({ productData, isNew, normal, dispatch, navigate, location, pid, className }) => {
     const [isShowOption, setIsShowOption] = useState(false);
     const { current } = useSelector(state => state.user)

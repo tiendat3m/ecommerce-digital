@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import { renderStarFromNumber, formatMoney } from '../../utils/helpers'
 import { useNavigate } from 'react-router-dom'
 const ProductCard = ({ products }) => {
-    console.log(products)
     const navigate = useNavigate()
     return (
         <div onClick={(e) => navigate(`/${products?.category?.toLowerCase()}/${products._id}/${products.title}`)} className='w-1/3 cursor-pointer flex-auto px-[10px] mb-[20px]'>

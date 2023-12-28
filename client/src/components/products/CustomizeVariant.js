@@ -95,7 +95,7 @@ const CustomizeVariant = ({ customizeVariant, setCustomizeVariant }) => {
                         register={register}
                         errors={errors}
                         id={'title'}
-                        style='flex-auto'
+                        style={'flex-auto'}
                         fullWidth
                     />
                 </div>
@@ -108,7 +108,7 @@ const CustomizeVariant = ({ customizeVariant, setCustomizeVariant }) => {
                             required: 'Require fill'
                         }}
                         id='price'
-                        style='flex-auto'
+                        style={'flex-auto'}
                         fullWidth
                         type='number'
                     />
@@ -120,7 +120,7 @@ const CustomizeVariant = ({ customizeVariant, setCustomizeVariant }) => {
                         validate={{
                             required: 'Require fill'
                         }}
-                        style='flex-auto'
+                        style={'flex-auto'}
                         fullWidth
                     />
                 </div>

@@ -7,18 +7,15 @@ import moment from 'moment/moment'
 import { secondsToHms } from 'utils/helpers'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDealDaily } from 'store/products/productSlice'
-
-
 const { AiFillStar, AiOutlineMenu } = icons
-let intervalId
-
 const DealDaily = () => {
+    let intervalId
     const dispatch = useDispatch()
     const [hour, setHour] = useState(0);
     const [minute, setMinute] = useState(0);
     const [second, setSecond] = useState(0);
     const [expireTime, setExpireTime] = useState(false)
-    const { dealDaily } = useSelector(s => s.products)
+    const { dealDaily } = useSelector(state => state.products)
     const fetchDealDaily = async () => {
         const response = await apiGetProducts({ sort: '-totalRatings', limit: 20 })
         if (response.success) {
@@ -46,7 +43,9 @@ const DealDaily = () => {
 
     useEffect(() => {
         intervalId && clearInterval(intervalId)
-        if (moment(moment(dealDaily?.time).format('MM/DD/YYYY')).isBefore(moment())) fetchDealDaily()
+        if (moment(moment(dealDaily?.time).format('MM/DD/YYYY')).isBefore(moment())) {
+            fetchDealDaily()
+        }
     }, [expireTime])
 
     useEffect(() => {
@@ -81,8 +80,6 @@ const DealDaily = () => {
             }
         }
     }
-
-
     return (
         <div className='border w-full flex-auto'>
             <div className='flex justify-between p-5 items-center w-full '>

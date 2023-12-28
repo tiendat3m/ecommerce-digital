@@ -1,26 +1,24 @@
-import React, { memo, useCallback, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { productTabs } from 'utils/constants'
-import VoteBar from '../vote/VoteBar'
+import { VoteBar, Comment, VoteOption } from '../vote'
 import { renderStarFromNumber } from 'utils/helpers'
 import Button from '../buttons/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { showModal } from 'store/app/appSlice'
-import VoteOption from '../vote/VoteOption'
 import { apiRatings } from 'apis'
-import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
 import path from 'utils/path'
-import Comment from '../vote/Comment'
+import Swal from 'sweetalert2'
 
 const ProductInfo = ({ totalRatings, ratings, productName, pid, rerender }) => {
     const [activeTabs, setActiveTabs] = useState(1)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { isLoggedIn } = useSelector(state => state.user)
-    const [payload, setPayload] = useState({
-        comment: '',
-        score: ''
-    })
+    // const [payload, setPayload] = useState({
+    //     comment: '',
+    //     score: ''
+    // })
     const handleSumbitVoteOption = async ({ comment, score }) => {
         if (!comment || !pid || !score) {
             alert('Please vote before submit')

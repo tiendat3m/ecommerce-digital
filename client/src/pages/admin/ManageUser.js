@@ -32,6 +32,7 @@ const ManageUser = () => {
     const [editEl, setEditEl] = useState(null)
     const fetchUsers = async (params) => {
         const response = await apiGetUsers({ ...params, limit: +process.env.REACT_APP_LIMIT })
+        console.log(response)
         if (response.success) setUsers(response)
     }
     const queriesDebounce = useDebounce(queries.q, 800)

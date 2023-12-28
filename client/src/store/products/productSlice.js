@@ -7,7 +7,7 @@ export const productSlice = createSlice({
   initialState: {
     newProducts: null,
     errorMessage: '',
-    dealDaily: BsNutFill
+    dealDaily: null
   },
   reducers: {
     getDealDaily: (state, action) => {

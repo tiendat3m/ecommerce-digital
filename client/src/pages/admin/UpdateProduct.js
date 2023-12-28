@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { getBase64, validate } from 'utils/helpers'
-import { GrFormClose } from 'react-icons/gr'
 import { showModal } from 'store/app/appSlice'
 import { apiUpdateProduct } from 'apis'
 

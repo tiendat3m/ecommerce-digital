@@ -1,5 +1,5 @@
-import moment from 'moment'
 import React, { memo } from 'react'
+import moment from 'moment'
 import { FaUserCircle } from 'react-icons/fa'
 import { renderStarFromNumber } from 'utils/helpers'
 const Comment = ({ name, comment, updatedAt, star }) => {

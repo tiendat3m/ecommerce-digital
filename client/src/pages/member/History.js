@@ -1,12 +1,12 @@
+import React, { useEffect, useState } from 'react'
+import CustomSelect from 'components/inputs/CustomSelect';
 import { apiGetUserOrders } from 'apis'
 import { InputForm, Pagination } from 'components';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
-import { MdEditNote, MdDeleteOutline, MdOutlineDashboardCustomize } from 'react-icons/md'
-import CustomSelect from 'components/inputs/CustomSelect';
+import { MdDeleteOutline } from 'react-icons/md'
 import { statusOrders } from 'utils/constants';
+import moment from 'moment';
 import withBaseComponent from 'hocs/withBaseComponent';
 
 const History = ({ navigate, location }) => {

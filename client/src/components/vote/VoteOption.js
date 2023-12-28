@@ -1,9 +1,8 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
+import Button from '../buttons/Button'
 import logo from 'assets/logo.png'
 import { AiFillStar } from 'react-icons/ai'
 import { voteOptions } from 'utils/constants'
-import Comment from './Comment'
-import Button from '../buttons/Button'
 const VoteOption = ({ productName, handleSumbitVoteOption }) => {
     const [chosenScore, setChosenScore] = useState(null)
     const [score, setScore] = useState(null)

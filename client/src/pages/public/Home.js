@@ -11,7 +11,6 @@ const Home = ({ navigate }) => {
 
     const { newProducts } = useSelector(state => state.products)
     const { categories } = useSelector(state => state.app)
-    // console.log(categories)
 
     return (
         <>

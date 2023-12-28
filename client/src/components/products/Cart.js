@@ -12,14 +12,12 @@ import { formatMoney } from 'utils/helpers'
 import path from 'utils/path'
 const Cart = ({ dispatch, navigate }) => {
     const { currentCart } = useSelector(state => state.user)
-    // console.log(current)
     const removeCart = async (pid, color) => {
         const response = await apiRemoveCart(pid, color)
         if (response.success) {
             dispatch(getCurrent())
         } else toast.error(response.mes)
     }
-
     return (
         <div onClick={(e) => e.stopPropagation()} className='w-[450px] bg-black h-screen grid grid-rows-10 text-white px-6 pb-6 animate-slide-left'>
             <header className='row-span-1 h-full text-2xl  border-gray-500 flex items-center justify-between font-bold border-b'>
@@ -57,7 +55,7 @@ const Cart = ({ dispatch, navigate }) => {
                 <Button handleOnclick={() => {
                     dispatch(showCart())
                     navigate(`/${path.MEMBER}/${path.DETAIL_CART}`)
-                }} style='rounded-none w-full bg-main py-2 mt-4'>Shopping Cart</Button>
+                }} style={'rounded-none w-full bg-main py-2 mt-4'}>Shopping Cart</Button>
             </div>
         </div>
     )

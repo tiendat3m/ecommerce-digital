@@ -1,7 +1,6 @@
-import { Button, Product } from 'components'
+import { Product } from 'components'
 import React from 'react'
 import { useSelector } from 'react-redux'
-
 const Wishlist = () => {
     const { current } = useSelector((s) => s.user)
     console.log(current)
@@ -17,11 +16,6 @@ const Wishlist = () => {
                             pid={el._id} v
                             productData={el}
                         />
-                        {/* <div className='px-3'>
-                            <Button>
-                                Add to cart
-                            </Button>
-                        </div> */}
                     </div>
                 ))}
             </div>

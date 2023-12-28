@@ -1,9 +1,6 @@
 import React, { memo } from 'react'
 import { navigation } from 'utils/constants'
 import { NavLink } from 'react-router-dom'
-
-
-
 const Navigation = () => {
   return (
     <div className='border-y w-main h-[48px] py-2 flex items-center text-sm'>

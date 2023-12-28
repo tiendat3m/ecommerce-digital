@@ -1,17 +1,17 @@
-import { Button, InputForm, Loading, MemberSidebar } from 'components'
-import moment from 'moment'
 import React, { useEffect } from 'react'
+import { Button, InputForm, Loading } from 'components'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import defaultAvatar from 'assets/avatarDefault.png'
+import { useSelector } from 'react-redux'
 import { apiUpdateCurrent } from 'apis'
 import { toast } from 'react-toastify'
 import { getCurrent } from 'store/user/asyncActions'
-import withBaseComponent from 'hocs/withBaseComponent'
 import { showModal } from 'store/app/appSlice'
 import { useSearchParams } from 'react-router-dom'
+import defaultAvatar from 'assets/avatarDefault.png'
+import withBaseComponent from 'hocs/withBaseComponent'
+import moment from 'moment'
 const Personal = ({ dispatch, navigate }) => {
-    const { register, formState: { errors, isDirty }, handleSubmit, watch, reset } = useForm()
+    const { register, formState: { errors, isDirty }, handleSubmit, reset } = useForm()
     const { current } = useSelector(state => state.user)
     const [searchParams] = useSearchParams()
     useEffect(() => {
@@ -57,7 +57,7 @@ const Personal = ({ dispatch, navigate }) => {
                         required: 'Require fill'
                     }}
                     fullWidth
-                    style='flex-auto'
+                    style={'flex-auto'}
                 />
                 <InputForm
                     label={'Last Name'}
@@ -68,7 +68,7 @@ const Personal = ({ dispatch, navigate }) => {
                         required: 'Require fill'
                     }}
                     fullWidth
-                    style='flex-auto'
+                    style={'flex-auto'}
                 />
                 <InputForm
                     label={'Email'}
@@ -78,7 +78,7 @@ const Personal = ({ dispatch, navigate }) => {
                     validate={{
                         required: 'Require fill',
                         pattern: {
-                            value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                            value: /^\w+([-]?\w+)*@\w+([-]?\w+)*(\w{2,3})+$/,
                             message: 'Email invalid'
                         }
                     }}

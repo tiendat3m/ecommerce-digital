@@ -12,7 +12,7 @@ const FinalRegister = () => {
         if (status === 'success') Swal.fire('Congratulations', 'Đăng kí thành công', 'success').then(() => {
             navigate(`/${path.LOGIN}`)
         })
-    }, [])
+    }, [status])
     return (
         <div className='h-screen w-screen bg-gray-100'>
 
